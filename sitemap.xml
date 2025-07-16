@@ -3,10 +3,31 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://example.com/</loc>
-    <lastmod>2025-07-13T14:27:57+08:00</lastmod>
+    <lastmod>2025-07-16T14:05:05+08:00</lastmod>
+  </url><url>
+    <loc>https://example.com/tags/bgp/</loc>
+    <lastmod>2025-07-16T14:05:05+08:00</lastmod>
+  </url><url>
+    <loc>https://example.com/p/bgp%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/</loc>
+    <lastmod>2025-07-16T14:05:05+08:00</lastmod>
   </url><url>
     <loc>https://example.com/categories/</loc>
-    <lastmod>2025-07-13T14:27:57+08:00</lastmod>
+    <lastmod>2025-07-16T14:05:05+08:00</lastmod>
+  </url><url>
+    <loc>https://example.com/tags/network/</loc>
+    <lastmod>2025-07-16T14:05:05+08:00</lastmod>
+  </url><url>
+    <loc>https://example.com/post/</loc>
+    <lastmod>2025-07-16T14:05:05+08:00</lastmod>
+  </url><url>
+    <loc>https://example.com/tags/</loc>
+    <lastmod>2025-07-16T14:05:05+08:00</lastmod>
+  </url><url>
+    <loc>https://example.com/categories/%E7%BD%91%E7%BB%9C/</loc>
+    <lastmod>2025-07-16T14:05:05+08:00</lastmod>
+  </url><url>
+    <loc>https://example.com/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/</loc>
+    <lastmod>2025-07-16T14:05:05+08:00</lastmod>
   </url><url>
     <loc>https://example.com/tags/https/</loc>
     <lastmod>2025-07-13T14:27:57+08:00</lastmod>
@@ -14,25 +35,13 @@
     <loc>https://example.com/p/https%E7%9A%84%E5%8E%9F%E7%90%86/</loc>
     <lastmod>2025-07-13T14:27:57+08:00</lastmod>
   </url><url>
-    <loc>https://example.com/post/</loc>
-    <lastmod>2025-07-13T14:27:57+08:00</lastmod>
-  </url><url>
-    <loc>https://example.com/tags/</loc>
-    <lastmod>2025-07-13T14:27:57+08:00</lastmod>
-  </url><url>
     <loc>https://example.com/tags/tls/</loc>
-    <lastmod>2025-07-13T14:27:57+08:00</lastmod>
-  </url><url>
-    <loc>https://example.com/categories/%E7%BD%91%E7%BB%9C/</loc>
     <lastmod>2025-07-13T14:27:57+08:00</lastmod>
   </url><url>
     <loc>https://example.com/p/calico%E7%BD%91%E7%BB%9C%E6%8F%92%E4%BB%B6%E4%BB%8B%E7%BB%8D/</loc>
     <lastmod>2025-07-12T14:46:36+08:00</lastmod>
   </url><url>
     <loc>https://example.com/tags/markdown/</loc>
-    <lastmod>2025-07-12T14:46:36+08:00</lastmod>
-  </url><url>
-    <loc>https://example.com/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/</loc>
     <lastmod>2025-07-12T14:46:36+08:00</lastmod>
   </url><url>
     <loc>https://example.com/page/</loc>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>云原生 on star‘s Blog</title>
-        <link>https://example.com/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/</link>
-        <description>Recent content in 云原生 on star‘s Blog</description>
+        <title>Network on star‘s Blog</title>
+        <link>https://example.com/tags/network/</link>
+        <description>Recent content in Network on star‘s Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>Example Person</copyright>
-        <lastBuildDate>Wed, 16 Jul 2025 14:05:05 +0800</lastBuildDate><atom:link href="https://example.com/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 16 Jul 2025 14:05:05 +0800</lastBuildDate><atom:link href="https://example.com/tags/network/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>BGP协议介绍</title>
         <link>https://example.com/p/bgp%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/</link>
         <pubDate>Wed, 16 Jul 2025 14:05:05 +0800</pubDate>
@@ -93,52 +93,6 @@
 &lt;li&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;默认EBGP传递时 TTL值为1（需要特别注意）&lt;/font&gt;&lt;/li&gt;
 &lt;li&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;默认IBGP传递时 TTL值为255&lt;/font&gt;&lt;/li&gt;
 &lt;/ul&gt;
-</description>
-        </item>
-        <item>
-        <title>Calico网络插件介绍</title>
-        <link>https://example.com/p/calico%E7%BD%91%E7%BB%9C%E6%8F%92%E4%BB%B6%E4%BB%8B%E7%BB%8D/</link>
-        <pubDate>Sat, 12 Jul 2025 14:46:36 +0800</pubDate>
-        
-        <guid>https://example.com/p/calico%E7%BD%91%E7%BB%9C%E6%8F%92%E4%BB%B6%E4%BB%8B%E7%BB%8D/</guid>
-        <description>&lt;p&gt;&lt;img src=&#34;https://example.com/img/calico.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;image.png&#34;
-	
-	
-&gt;Felix：运行在每一台 Host 的 agent 进程，主要负责网络接口管理和监听、路由、ARP 管理、ACL 管理和同步、状态上报等。&lt;/p&gt;
-&lt;p&gt;etcd：分布式键值存储，主要负责网络元数据一致性，确保 Calico 网络状态的准确性，可以与 kubernetes 共用；&lt;/p&gt;
-&lt;p&gt;BGP Client（BIRD）：Calico 为每一台 Host 部署一个 BGP Client，使用 BIRD 实现，BIRD 是一个单独的持&lt;a class=&#34;link&#34; href=&#34;http://mp.weixin.qq.com/s?__biz=MjM5MzU5NDYwNA==&amp;amp;mid=2247505049&amp;amp;idx=1&amp;amp;sn=7f4c3f0047c0f7f93a56f0ca44c6b813&amp;amp;chksm=a696391a91e1b00c008ac3cf90972ecdebfec4fce497ef4dd760461229fdd134bdc5744de318&amp;amp;scene=21#wechat_redirect&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;续发展的项目，实现了众多动态路由协议比如 BGP、OSPF、RIP 等。在 Calico 的角色是监&lt;/a&gt;听 Host 上由 Felix 注入的路由信息，然后通过 BGP 协议广播告诉剩余 Host 节点，从而实现网络互通。&lt;/p&gt;
-&lt;p&gt;BGP Route Reflector：在大型网络规模中，如果仅仅使用 BGP client 形成 mesh 全网互联的方案就会导致规模限制，因为所有节点之间俩俩互联，需要 N^2 个连接，为了解决这个规模问题，可以采用 BGP 的 Router Reflector 的方法，使所有 BGP Client 仅与特定 RR 节点互联并做路由同步，从而大大减少连接数。&lt;/p&gt;
-&lt;h3 id=&#34;calico-api-server&#34;&gt;Calico API Server
-&lt;/h3&gt;&lt;p&gt;可以使用 kubectl 直接管理 Calico。&lt;/p&gt;
-&lt;h3 id=&#34;felix&#34;&gt;Felix
-&lt;/h3&gt;&lt;p&gt;Felix 以 agent 代理的形式在每台机器端点上运行。对路由和 ACL 以及主机编程，为该主机上的端点提供所需的连接。&lt;/p&gt;
-&lt;p&gt;根据具体的编排器环境，Felix 负责：&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;接口管理&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;将有关接口的信息编入内核，以便内核能够正确处理来自该端点的流量。特别是，确保主机响应来自每个工作负载的 ARP 请求，提供主机的 MAC，并为它所管理的接口启用 IP 转发。它还监控接口，以确保编程在适当的时候应用。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;路由编程&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;将其主机上的端点的路由编程到 Linux 内核的 FIB（转发信息库）。这可以确保到达主机上的以这些端点为目的地的数据包被相应地转发。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;ACL 编程&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;在 Linux 内核中编程 ACL，以确保只有有效的流量可以在端点之间发送，并且端点不能规避 Calico 的安全措施。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;状态报告&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;提供网络健康数据。特别是在配置其主机时报告错误和问题。这些数据被写入数据存储，以便对网络的其他组件和运营商可见。&lt;/p&gt;
-&lt;h3 id=&#34;bird&#34;&gt;BIRD
-&lt;/h3&gt;&lt;p&gt;BGP Internet Routing Daemon，简称 BIRD。从 Felix 获取路由，并分发到网络上的 BGP peer，用于主机间的路由。在每个 Felix 代理的节点上运行。&lt;/p&gt;
-&lt;p&gt;BGP 客户端负责：&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;路由分配&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;当 Felix 将路由插入 Linux 内核的 FIB 时，BGP 客户端将它们分配给部署中的其他节点。这确保了部署中的有效流量路由。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;BGP 路由反射器的配置&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;BGP 路由反射器通常是为大型部署而配置的，而不是一个标准的 BGP 客户端。BGP 路由反射器作为连接 BGP 客户端的一个中心点。(标准 BGP 要求每个 BGP 客户端在网状拓扑结构中与其他每个 BGP 客户端连接，这很难维护)。&lt;/p&gt;
-&lt;p&gt;为了实现冗余，你可以无缝部署多个 BGP 路由反射器。BGP 路由反射器只参与网络的控制：没有终端数据通过它们。当 Calico BGP 客户端将其 FIB 中的路由通告给路由反射器时，路由反射器将这些路由通告给部署中的其他节点。&lt;/p&gt;
-&lt;h3 id=&#34;confd&#34;&gt;confd
-&lt;/h3&gt;&lt;p&gt;开源的、轻量级的配置管理工具。监控 Calico 数据存储对 BGP 配置和全局默认的日志变更，如 AS 号、日志级别和 IPAM 信息。&lt;/p&gt;
-&lt;p&gt;Confd 根据存储中的数据更新，动态生成 BIRD 配置文件。当配置文件发生变化时，confd 会触发 BIRD 加载新的文件。&lt;/p&gt;
 </description>
         </item>
         

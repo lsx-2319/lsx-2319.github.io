@@ -7,7 +7,95 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>Example Person</copyright>
-        <lastBuildDate>Sun, 13 Jul 2025 14:27:57 +0800</lastBuildDate><atom:link href="https://example.com/categories/%E7%BD%91%E7%BB%9C/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 16 Jul 2025 14:05:05 +0800</lastBuildDate><atom:link href="https://example.com/categories/%E7%BD%91%E7%BB%9C/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>BGP协议介绍</title>
+        <link>https://example.com/p/bgp%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/</link>
+        <pubDate>Wed, 16 Jul 2025 14:05:05 +0800</pubDate>
+        
+        <guid>https://example.com/p/bgp%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/</guid>
+        <description>&lt;p&gt;BGP协议&lt;/p&gt;
+&lt;h4 id=&#34;1什么是bgp路由协议&#34;&gt;1、什么是bgp路由协议
+&lt;/h4&gt;&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;BGP是一种基于距离矢量的路由协议，用于实现不同AS之间的路由可达。&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;BGP协议的基本特点：&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;（1）BGP是一种外部网关协议，其着眼点不在于发现和计算路由，而在于控制路由的传播和选择最佳路由；&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;（2）BGP使用TCP作为其传输层协议（端口号179）,提高了协议的可靠性； &lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;（3）BGP是一种距离矢量路由协议，在设计上就避免了环路的发生；&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;（4）BGP提供了丰富的路由策略，能够实现路由的灵活过滤和选择； &lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;（5）BGP采用触发式增量更新，而不是周期性的更新；&lt;/font&gt;&lt;/p&gt;
+&lt;h4 id=&#34;2如何建立bgp对等体&#34;&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;2、如何建立bgp对等体&lt;/font&gt;
+&lt;/h4&gt;&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;（1）&lt;/font&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;TCP连接建立&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;（2）BGP路由器发送OPEN报文协商参数&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;（3）BGP路由器发送keepalive报文完成对等体建立&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;（4）&lt;/font&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;参数协商正常后双方相互发送keepalive报文，收到对方的keepalive报文后对等体建立成功，同时后续定期发送keepalive报文用于保持连接。&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;（5）BGP对等体关系建立好了，就可以通过BGP update 报文通告路由到对等体。收到对方的keepalive报文后对等体建立成功，同时后续定期发送keepalive报文用于保持连接。&lt;/font&gt;
+&lt;img src=&#34;https://example.com/img/bgp.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;image.png&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h4 id=&#34;3bgp的报文类型&#34;&gt;3、bgp的报文类型
+&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;https://example.com/img/bgp2.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;image.png&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h4 id=&#34;4bgp状态变化&#34;&gt;4、bgp状态变化
+&lt;/h4&gt;&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;（1）Idle状态是BGP初始状态。&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;在Idle状态下，BGP拒绝对等体发送的连接请求。只有在收到本设备的Start事件后，BGP才开始尝试和其它BGP对等体进行TCP连接，并转至Connect状态。&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;Start事件是由一个操作者配置一个BGP过程，或者重置一个已经存在的过程或者路由器软件重置BGP过程引起的。&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;任何状态中收到Notification报文或TCP拆链通知等Error事件后，BGP都会转至Idle状态。&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;（2）Connect状态&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;在Connect状态下，BGP启动连接重传定时器（Connect Retry），等待TCP完成连接。&lt;/font&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;如果TCP连接成功，那么BGP向对等体发送Open报文，并转至OpenSent状态。&lt;/font&gt;&lt;/li&gt;
+&lt;li&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;如果TCP连接失败，那么BGP转至Active状态。&lt;/font&gt;&lt;/li&gt;
+&lt;li&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;如果连接重传定时器超时，BGP仍没有收到BGP对等体的响应，那么BGP继续尝试和其它BGP对等体进行TCP连接，停留在Connect状态。&lt;/font&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;（3）Active状态&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;在Active状态下，BGP总是在试图建立TCP连接。&lt;/font&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;如果TCP连接成功，那么BGP向对等体发送Open报文，关闭连接重传定时器，并转至OpenSent状态。&lt;/font&gt;&lt;/li&gt;
+&lt;li&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;如果TCP连接失败，那么BGP停留在Active状态。&lt;/font&gt;&lt;/li&gt;
+&lt;li&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;如果连接重传定时器超时，BGP仍没有收到BGP对等体的响应，那么BGP转至Connect状态。&lt;/font&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;（4）Opensent状态、openconfirm状态&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;TCP三次握手建立成功后，发送open报文建立对等体关系，此时的状态为 &lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;opensent状态，当收到对端回应的open报文，并且参数检查无误，在发送keepalive报文后进入openconfirm状态。&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;（5）established状态&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;进入openconfirm状态后，收到对端的keepalive报文后进入established状态。&lt;/font&gt;&lt;/p&gt;
+&lt;h4 id=&#34;5bgp的路由生成&#34;&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;5、bgp的路由生成&lt;/font&gt;
+&lt;/h4&gt;&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;BGP路由是通过BGP命令通告而成的，而通告BGP路由的方法有两种：network和Import。 &lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;（1）network方式：&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;使用network命令可以将当前设备路由表中的路由（非BGP）发布到BGP路由表中并通告给邻居，和OSPF中使用network命令的方式大同小异，只不过在BGP宣告时，只需要宣告网段+掩码数即可，如：network 12.12.0.0 16。&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;（2）Import方式：&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;使用Import命令可以将该路由器学到的路由信息重分发到BGP路由表中，是BGP宣告路由的一种方式，可以引入BGP的路由包括：直连路由、静态路由及动态路由协议学到的路由。其命令格式与在RIP中重分发OSPF差不多。&lt;/font&gt;&lt;/p&gt;
+&lt;h4 id=&#34;6bgp通告原则&#34;&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;6、BGP通告原则&lt;/font&gt;
+&lt;/h4&gt;&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;BGP设备会将最优路由加入BGP路由表，形成BGP路由。&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;BGP设备与对等体建立邻居关系后，采用以下交互原则： &lt;/font&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;从IBGP对等体获得的BGP路由，BGP设备只传递给它的EBGP对等体。&lt;/font&gt;&lt;/li&gt;
+&lt;li&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;从EBGP对等体获得的BGP路由，BGP设备传递给它所有EBGP和IBGP对等体（对等体是IBGP只能传递一跳，对等体是EBGP则不限制）&lt;/font&gt;&lt;/li&gt;
+&lt;li&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;当存在多条到达同一目的地址的有效路由时，BGP设备只将最优路由发布给对等体&lt;/font&gt;&lt;/li&gt;
+&lt;li&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;路由更新时，BGP设备只发送更新的BGP路由&lt;/font&gt;&lt;/li&gt;
+&lt;li&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;所有对等体发送的路由，BGP设备都会接收&lt;/font&gt;&lt;/li&gt;
+&lt;li&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;所有EBGP对等体在传递过程中下一跳改变&lt;/font&gt;&lt;/li&gt;
+&lt;li&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;所有IBGP对等体在传递过程中下一跳不变（需要特别注意）&lt;/font&gt;&lt;/li&gt;
+&lt;li&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;默认EBGP传递时 TTL值为1（需要特别注意）&lt;/font&gt;&lt;/li&gt;
+&lt;li&gt;&lt;font style=&#34;color:rgb(51, 51, 51);&#34;&gt;默认IBGP传递时 TTL值为255&lt;/font&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        </item>
+        <item>
         <title>Https的原理</title>
         <link>https://example.com/p/https%E7%9A%84%E5%8E%9F%E7%90%86/</link>
         <pubDate>Sun, 13 Jul 2025 14:27:57 +0800</pubDate>
