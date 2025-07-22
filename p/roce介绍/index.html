@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="1.客户端请求 HTTPS 网址，然后连接到 server 的 443 端口 (HTTPS 默认端口，类似于 HTTP 的80端口)。\n2.采用 HTTPS 协议的服务器必须要有一套数字 CA (Certification Authority)证书，证书是需要申请的，并由专门的数字证书认证机构(CA)通过非常严格的审核之后颁发的电子证书 (当然了是要钱的，安全级别越高价格越贵)。颁发证书的同时会产生一个私钥和公钥。私钥由服务端自己保存，不可泄漏。公钥则是附带在证书的信息中，可以公开的。证书本身也附带一个证书电子签名，这个签名用来验证证书的完整性和真实性，可以防止证书被篡改。\n">
-<title>Https的原理</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="RoCE 什么是RoCE？ 全称RDMA over Converged Ethernet，RoCE是一种基于以太网的远程直接内存访问（RDMA）技术，旨在通过优化协议栈和硬件卸载，实现高性能、低延迟的数据传输。其核心是通过绕过操作系统内核，减少数据复制和CPU开销，尤其适用于AI训练、超算和分布式存储等场景。\n">
+<title>Roce介绍</title>
 
-<link rel='canonical' href='https://example.com/p/https%E7%9A%84%E5%8E%9F%E7%90%86/'>
+<link rel='canonical' href='https://example.com/p/roce%E4%BB%8B%E7%BB%8D/'>
 
-<link rel="stylesheet" href="/scss/style.min.946cca6c6259ef94ac55abfae7c7bf3291ea3ed5eea17ef77500b257217c6710.css"><meta property='og:title' content="Https的原理">
-<meta property='og:description' content="1.客户端请求 HTTPS 网址，然后连接到 server 的 443 端口 (HTTPS 默认端口，类似于 HTTP 的80端口)。\n2.采用 HTTPS 协议的服务器必须要有一套数字 CA (Certification Authority)证书，证书是需要申请的，并由专门的数字证书认证机构(CA)通过非常严格的审核之后颁发的电子证书 (当然了是要钱的，安全级别越高价格越贵)。颁发证书的同时会产生一个私钥和公钥。私钥由服务端自己保存，不可泄漏。公钥则是附带在证书的信息中，可以公开的。证书本身也附带一个证书电子签名，这个签名用来验证证书的完整性和真实性，可以防止证书被篡改。\n">
-<meta property='og:url' content='https://example.com/p/https%E7%9A%84%E5%8E%9F%E7%90%86/'>
+<link rel="stylesheet" href="/scss/style.min.946cca6c6259ef94ac55abfae7c7bf3291ea3ed5eea17ef77500b257217c6710.css"><meta property='og:title' content="Roce介绍">
+<meta property='og:description' content="RoCE 什么是RoCE？ 全称RDMA over Converged Ethernet，RoCE是一种基于以太网的远程直接内存访问（RDMA）技术，旨在通过优化协议栈和硬件卸载，实现高性能、低延迟的数据传输。其核心是通过绕过操作系统内核，减少数据复制和CPU开销，尤其适用于AI训练、超算和分布式存储等场景。\n">
+<meta property='og:url' content='https://example.com/p/roce%E4%BB%8B%E7%BB%8D/'>
 <meta property='og:site_name' content='star‘s Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='https' /><meta property='article:tag' content='tls' /><meta property='article:published_time' content='2025-07-13T14:27:57&#43;08:00'/><meta property='article:modified_time' content='2025-07-13T14:27:57&#43;08:00'/>
-<meta name="twitter:title" content="Https的原理">
-<meta name="twitter:description" content="1.客户端请求 HTTPS 网址，然后连接到 server 的 443 端口 (HTTPS 默认端口，类似于 HTTP 的80端口)。\n2.采用 HTTPS 协议的服务器必须要有一套数字 CA (Certification Authority)证书，证书是需要申请的，并由专门的数字证书认证机构(CA)通过非常严格的审核之后颁发的电子证书 (当然了是要钱的，安全级别越高价格越贵)。颁发证书的同时会产生一个私钥和公钥。私钥由服务端自己保存，不可泄漏。公钥则是附带在证书的信息中，可以公开的。证书本身也附带一个证书电子签名，这个签名用来验证证书的完整性和真实性，可以防止证书被篡改。\n">
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='roce' /><meta property='article:tag' content='rdma' /><meta property='article:published_time' content='2025-07-22T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2025-07-22T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Roce介绍">
+<meta name="twitter:description" content="RoCE 什么是RoCE？ 全称RDMA over Converged Ethernet，RoCE是一种基于以太网的远程直接内存访问（RDMA）技术，旨在通过优化协议栈和硬件卸载，实现高性能、低延迟的数据传输。其核心是通过绕过操作系统内核，减少数据复制和CPU开销，尤其适用于AI训练、超算和分布式存储等场景。\n">
     </head>
     <body class="
     article-page
@@ -237,7 +237,46 @@
     </ol>
 </aside>
 
-    
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#roce">RoCE</a>
+      <ol>
+        <li><a href="#什么是roce">什么是RoCE？</a></li>
+        <li><a href="#rocev1"><strong>RoCEv1</strong></a></li>
+        <li><a href="#rocev2">RoCEv2</a></li>
+        <li><a href="#rocev2的普及性"><strong>RoCEv2的普及性</strong></a></li>
+        <li><a href="#对比infiniband"><strong>对比InfiniBand</strong></a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
 
             <main class="main full-width">
     <article class="main-article">
@@ -256,7 +295,7 @@
 
     <div class="article-title-wrapper">
         <h2 class="article-title">
-            <a href="/p/https%E7%9A%84%E5%8E%9F%E7%90%86/">Https的原理</a>
+            <a href="/p/roce%E4%BB%8B%E7%BB%8D/">Roce介绍</a>
         </h2>
     
         
@@ -278,7 +317,7 @@
   <path d="M3 11h16" />
   <path d="M18 16.496v1.504l1 1" />
 </svg>
-                <time class="article-time--published">Jul 13, 2025</time>
+                <time class="article-time--published">Jul 22, 2025</time>
             </div>
         
 
@@ -293,7 +332,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 2 分钟
+                    阅读时长: 3 分钟
                 </time>
             </div>
         
@@ -308,26 +347,22 @@
     <section class="article-content">
     
     
-    <p>1.客户端请求 HTTPS 网址，然后连接到 server 的 443 端口 (HTTPS 默认端口，类似于 HTTP 的80端口)。</p>
-<p>2.采用 HTTPS 协议的服务器必须要有一套数字 CA (Certification Authority)证书，证书是需要申请的，并由专门的数字证书认证机构(CA)通过非常严格的审核之后颁发的电子证书 (当然了是要钱的，安全级别越高价格越贵)。颁发证书的同时会产生一个私钥和公钥。私钥由服务端自己保存，不可泄漏。公钥则是附带在证书的信息中，可以公开的。证书本身也附带一个证书电子签名，这个签名用来验证证书的完整性和真实性，可以防止证书被篡改。</p>
-<p>3.服务器响应客户端请求，将证书传递给客户端，证书包含公钥和大量其他信息，比如证书颁发机构信息，公司信息和证书有效期等。Chrome 浏览器点击地址栏的锁标志再点击证书就可以看到证书详细信息。<br>
-4.客户端解析证书并对其进行验证。如果证书不是可信机构颁布，或者证书中的域名与实际域名不一致，或者证书已经过期，就会向访问者显示一个警告，由其选择是否还要继续通信。就像下面这样：</p>
-<p><img src="/img/similianjie.png"
-	
-	
-	
-	loading="lazy"
-	
-		alt="image.png"
-	
-	
->
-如果证书没有问题，客户端就会从服务器证书中取出服务器的公钥A。然后客户端还会生成一个随机码 KEY，并使用公钥A将其加密。</p>
-<p>5.客户端把加密后的随机码 KEY 发送给服务器，作为后面对称加密的密钥。</p>
-<p>6.服务器在收到随机码 KEY 之后会使用私钥B将其解密。经过以上这些步骤，客户端和服务器终于建立了安全连接，完美解决了对称加密的密钥泄露问题，接下来就可以用对称加密愉快地进行通信了。</p>
-<p>7.服务器使用密钥 (随机码 KEY)对数据进行对称加密并发送给客户端，客户端使用相同的密钥 (随机码 KEY)解密数据。</p>
-<p>8.双方使用对称加密愉快地传输所有数据。
-<img src="/img/%e7%a4%ba%e6%84%8f%e5%9b%be.png"
+    <h2 id="roce">RoCE
+</h2><h3 id="什么是roce">什么是RoCE？
+</h3><p>全称RDMA over Converged Ethernet，RoCE是一种基于以太网的远程直接内存访问（RDMA）技术，旨在通过优化协议栈和硬件卸载，实现高性能、低延迟的数据传输。其核心是通过绕过操作系统内核，减少数据复制和CPU开销，尤其适用于AI训练、超算和分布式存储等场景。</p>
+<p>从 2010 年开始，RMDA 开始引起越来越多的关注，当时IBTA发布了第一个在融合以太网 (RoCE) 上运行 RMDA 的规范。然而，最初的规范将 RoCE 部署限制在单个第 2 层域，因为 RoCE 封装帧没有路由功能。2014 年，IBTA 发布了 RoCEv2，它更新了最初的 RoCE 规范以支持跨第 3 层网络的路由，使其更适合超大规模数据中心网络和企业数据中心等。</p>
+<h3 id="rocev1"><strong>RoCEv1</strong>
+</h3><p>2010年4月，IBTA发布了RoCE，此标准是作为Infiniband Architecture Specification的附加件发布的，所以也称为IBoE（InfiniBand over Ethernet）。这时的RoCE标准是在以太链路层之上用IB网络层代替了TCP/IP网络层，所以不支持IP路由功能。RoCE V1协议在以太层的typeID是0x8915。</p>
+<p>在RoCE中，infiniband的链路层协议头被去掉，用来表示地址的GUID被转换成以太网的MAC。Infiniband依赖于无损的物理传输，RoCE也同样依赖于无损的以太传输，这一要求会给以太网的部署带来了成本和管理上的开销。</p>
+<p>以太网的无损传输必须依靠L2的QoS支持，比如PFC(Priority Flow Control)，接收端在buffer池超过阈值时会向发送方发出pause帧，发送方MAC层在收到pause帧后，自动降低发送速率。这一要求，意味着整个传输环节上的所有节点包括end、switch、router，都必须全部支持L2 QoS，否则链路上的PFC就不能在两端发挥有效作用。</p>
+<h3 id="rocev2">RoCEv2
+</h3><p>由于RoCEv1的数据帧不带IP头部，所以只能在L2子网内通信。为了解决此问题，IBTA于2014年提出了RoCE V2，RoCEv2扩展了RoCEv1，将GRH(Global Routing Header)换成UDP header +　IP header，扩展后的帧结构如下图所示。</p>
+<p>针对RoCE v1和RoCE v2，以下两点值得注意：</p>
+<ul>
+<li>RoCE v1(Layer 2)运作在Ethernet Link Layer(Layer 2)所以Ethertype 0x8915，所以正常的Frame大小为1500 bytes，而Jumbo Frame则是9000 bytes。</li>
+<li>RoCE v2(Layer 3)运作在UDP/IPv4或UDP/IPv6之上(Layer 3)，采用UDP Port 4791进行传输。因为 RoCE v2的封包是在 Layer 3上可进行路由，所以有时又会称为Routable RoCE或简称RRoCE。</li>
+</ul>
+<p><img src="/img/roce.png"
 	
 	
 	
@@ -337,6 +372,46 @@
 	
 	
 ></p>
+<h3 id="rocev2的普及性"><strong>RoCEv2的普及性</strong>
+</h3><p><strong>生态成熟度</strong>：国内云计算与AI企业（如阿里云、腾讯云、华为云）普遍采用RoCEv2，因其兼容现有以太网架构且性价比高。例如，华为鲲鹏920芯片已支持100Gbps RoCE，并在数据中心部署中实现<strong>端到端延迟5-10μs</strong>。</p>
+<p><strong>应用场景</strong>：大规模AI训练（如千卡级集群）和分布式存储（如EMC Isilon）通过RoCEv2优化通信效率，实际带宽利用率达<strong>90%以上</strong>（400G以太网实测360Gbps）。</p>
+<h3 id="对比infiniband"><strong>对比InfiniBand</strong>
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>维度</th>
+          <th>RoCEv2</th>
+          <th>InfiniBand</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>协议栈</td>
+          <td>基于UDP/IP的以太网扩展</td>
+          <td>专用协议栈（物理层到传输层独立设计）</td>
+      </tr>
+      <tr>
+          <td>部署成本</td>
+          <td>利用现有以太网设备，成本低</td>
+          <td>需专用交换机和网卡，成本高</td>
+      </tr>
+      <tr>
+          <td>扩展性</td>
+          <td>支持三层路由，扩展性强</td>
+          <td>依赖子网管理器（SM），集中式管理</td>
+      </tr>
+      <tr>
+          <td>性能</td>
+          <td>延迟略高（微秒级），吞吐量接近IB</td>
+          <td>超低延迟（纳秒级），吞吐量更高</td>
+      </tr>
+      <tr>
+          <td>适用场景</td>
+          <td>通用数据中心、云计算、AI训练</td>
+          <td>超算中心、极致性能要求的HPC环境</td>
+      </tr>
+  </tbody>
+</table></div>
 
 </section>
 
@@ -345,9 +420,9 @@
     
     <section class="article-tags">
         
-            <a href="/tags/https/">Https</a>
+            <a href="/tags/roce/">Roce</a>
         
-            <a href="/tags/tls/">Tls</a>
+            <a href="/tags/rdma/">Rdma</a>
         
     </section>
 
@@ -381,12 +456,12 @@
             
                 
 <article class="">
-    <a href="/p/roce%E4%BB%8B%E7%BB%8D/">
+    <a href="/p/bgp%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Roce介绍</h2>
+            <h2 class="article-title">BGP协议介绍</h2>
         </div>
     </a>
 </article>
@@ -394,12 +469,12 @@
             
                 
 <article class="">
-    <a href="/p/bgp%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/">
+    <a href="/p/https%E7%9A%84%E5%8E%9F%E7%90%86/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">BGP协议介绍</h2>
+            <h2 class="article-title">Https的原理</h2>
         </div>
     </a>
 </article>

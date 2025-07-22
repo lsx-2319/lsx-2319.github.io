@@ -3,7 +3,28 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://example.com/</loc>
-    <lastmod>2025-07-16T14:05:05+08:00</lastmod>
+    <lastmod>2025-07-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.com/categories/</loc>
+    <lastmod>2025-07-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.com/post/</loc>
+    <lastmod>2025-07-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.com/tags/rdma/</loc>
+    <lastmod>2025-07-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.com/tags/roce/</loc>
+    <lastmod>2025-07-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.com/p/roce%E4%BB%8B%E7%BB%8D/</loc>
+    <lastmod>2025-07-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.com/tags/</loc>
+    <lastmod>2025-07-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.com/categories/%E7%BD%91%E7%BB%9C/</loc>
+    <lastmod>2025-07-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.com/tags/bgp/</loc>
     <lastmod>2025-07-16T14:05:05+08:00</lastmod>
@@ -11,19 +32,7 @@
     <loc>https://example.com/p/bgp%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/</loc>
     <lastmod>2025-07-16T14:05:05+08:00</lastmod>
   </url><url>
-    <loc>https://example.com/categories/</loc>
-    <lastmod>2025-07-16T14:05:05+08:00</lastmod>
-  </url><url>
     <loc>https://example.com/tags/network/</loc>
-    <lastmod>2025-07-16T14:05:05+08:00</lastmod>
-  </url><url>
-    <loc>https://example.com/post/</loc>
-    <lastmod>2025-07-16T14:05:05+08:00</lastmod>
-  </url><url>
-    <loc>https://example.com/tags/</loc>
-    <lastmod>2025-07-16T14:05:05+08:00</lastmod>
-  </url><url>
-    <loc>https://example.com/categories/%E7%BD%91%E7%BB%9C/</loc>
     <lastmod>2025-07-16T14:05:05+08:00</lastmod>
   </url><url>
     <loc>https://example.com/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/</loc>

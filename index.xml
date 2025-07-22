@@ -7,7 +7,80 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>Example Person</copyright>
-        <lastBuildDate>Wed, 16 Jul 2025 14:05:05 +0800</lastBuildDate><atom:link href="https://example.com/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Tue, 22 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://example.com/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Roce介绍</title>
+        <link>https://example.com/p/roce%E4%BB%8B%E7%BB%8D/</link>
+        <pubDate>Tue, 22 Jul 2025 00:00:00 +0000</pubDate>
+        
+        <guid>https://example.com/p/roce%E4%BB%8B%E7%BB%8D/</guid>
+        <description>&lt;h2 id=&#34;roce&#34;&gt;RoCE
+&lt;/h2&gt;&lt;h3 id=&#34;什么是roce&#34;&gt;什么是RoCE？
+&lt;/h3&gt;&lt;p&gt;全称RDMA over Converged Ethernet，RoCE是一种基于以太网的远程直接内存访问（RDMA）技术，旨在通过优化协议栈和硬件卸载，实现高性能、低延迟的数据传输。其核心是通过绕过操作系统内核，减少数据复制和CPU开销，尤其适用于AI训练、超算和分布式存储等场景。&lt;/p&gt;
+&lt;p&gt;从 2010 年开始，RMDA 开始引起越来越多的关注，当时IBTA发布了第一个在融合以太网 (RoCE) 上运行 RMDA 的规范。然而，最初的规范将 RoCE 部署限制在单个第 2 层域，因为 RoCE 封装帧没有路由功能。2014 年，IBTA 发布了 RoCEv2，它更新了最初的 RoCE 规范以支持跨第 3 层网络的路由，使其更适合超大规模数据中心网络和企业数据中心等。&lt;/p&gt;
+&lt;h3 id=&#34;rocev1&#34;&gt;&lt;strong&gt;RoCEv1&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;2010年4月，IBTA发布了RoCE，此标准是作为Infiniband Architecture Specification的附加件发布的，所以也称为IBoE（InfiniBand over Ethernet）。这时的RoCE标准是在以太链路层之上用IB网络层代替了TCP/IP网络层，所以不支持IP路由功能。RoCE V1协议在以太层的typeID是0x8915。&lt;/p&gt;
+&lt;p&gt;在RoCE中，infiniband的链路层协议头被去掉，用来表示地址的GUID被转换成以太网的MAC。Infiniband依赖于无损的物理传输，RoCE也同样依赖于无损的以太传输，这一要求会给以太网的部署带来了成本和管理上的开销。&lt;/p&gt;
+&lt;p&gt;以太网的无损传输必须依靠L2的QoS支持，比如PFC(Priority Flow Control)，接收端在buffer池超过阈值时会向发送方发出pause帧，发送方MAC层在收到pause帧后，自动降低发送速率。这一要求，意味着整个传输环节上的所有节点包括end、switch、router，都必须全部支持L2 QoS，否则链路上的PFC就不能在两端发挥有效作用。&lt;/p&gt;
+&lt;h3 id=&#34;rocev2&#34;&gt;RoCEv2
+&lt;/h3&gt;&lt;p&gt;由于RoCEv1的数据帧不带IP头部，所以只能在L2子网内通信。为了解决此问题，IBTA于2014年提出了RoCE V2，RoCEv2扩展了RoCEv1，将GRH(Global Routing Header)换成UDP header +　IP header，扩展后的帧结构如下图所示。&lt;/p&gt;
+&lt;p&gt;针对RoCE v1和RoCE v2，以下两点值得注意：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;RoCE v1(Layer 2)运作在Ethernet Link Layer(Layer 2)所以Ethertype 0x8915，所以正常的Frame大小为1500 bytes，而Jumbo Frame则是9000 bytes。&lt;/li&gt;
+&lt;li&gt;RoCE v2(Layer 3)运作在UDP/IPv4或UDP/IPv6之上(Layer 3)，采用UDP Port 4791进行传输。因为 RoCE v2的封包是在 Layer 3上可进行路由，所以有时又会称为Routable RoCE或简称RRoCE。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://example.com/img/roce.png&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;image.png&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;rocev2的普及性&#34;&gt;&lt;strong&gt;RoCEv2的普及性&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;生态成熟度&lt;/strong&gt;：国内云计算与AI企业（如阿里云、腾讯云、华为云）普遍采用RoCEv2，因其兼容现有以太网架构且性价比高。例如，华为鲲鹏920芯片已支持100Gbps RoCE，并在数据中心部署中实现&lt;strong&gt;端到端延迟5-10μs&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;应用场景&lt;/strong&gt;：大规模AI训练（如千卡级集群）和分布式存储（如EMC Isilon）通过RoCEv2优化通信效率，实际带宽利用率达&lt;strong&gt;90%以上&lt;/strong&gt;（400G以太网实测360Gbps）。&lt;/p&gt;
+&lt;h3 id=&#34;对比infiniband&#34;&gt;&lt;strong&gt;对比InfiniBand&lt;/strong&gt;
+&lt;/h3&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;维度&lt;/th&gt;
+          &lt;th&gt;RoCEv2&lt;/th&gt;
+          &lt;th&gt;InfiniBand&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;协议栈&lt;/td&gt;
+          &lt;td&gt;基于UDP/IP的以太网扩展&lt;/td&gt;
+          &lt;td&gt;专用协议栈（物理层到传输层独立设计）&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;部署成本&lt;/td&gt;
+          &lt;td&gt;利用现有以太网设备，成本低&lt;/td&gt;
+          &lt;td&gt;需专用交换机和网卡，成本高&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;扩展性&lt;/td&gt;
+          &lt;td&gt;支持三层路由，扩展性强&lt;/td&gt;
+          &lt;td&gt;依赖子网管理器（SM），集中式管理&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;性能&lt;/td&gt;
+          &lt;td&gt;延迟略高（微秒级），吞吐量接近IB&lt;/td&gt;
+          &lt;td&gt;超低延迟（纳秒级），吞吐量更高&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;适用场景&lt;/td&gt;
+          &lt;td&gt;通用数据中心、云计算、AI训练&lt;/td&gt;
+          &lt;td&gt;超算中心、极致性能要求的HPC环境&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+</description>
+        </item>
+        <item>
         <title>BGP协议介绍</title>
         <link>https://example.com/p/bgp%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/</link>
         <pubDate>Wed, 16 Jul 2025 14:05:05 +0800</pubDate>
