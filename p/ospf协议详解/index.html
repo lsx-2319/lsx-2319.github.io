@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="RoCE 什么是RoCE？ 全称RDMA over Converged Ethernet，RoCE是一种基于以太网的远程直接内存访问（RDMA）技术，旨在通过优化协议栈和硬件卸载，实现高性能、低延迟的数据传输。其核心是通过绕过操作系统内核，减少数据复制和CPU开销，尤其适用于AI训练、超算和分布式存储等场景。\n">
-<title>Roce介绍</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="好的，我们来详细解析一下 OSPF（Open Shortest Path First） 协议。它是网络协议栈中非常重要的内部网关协议（IGP），用于在单一自治系统（AS） 内部的路由器之间动态地交换路由信息并计算最优路径。\n">
+<title>OSPF协议详解</title>
 
-<link rel='canonical' href='https://example.com/p/roce%E4%BB%8B%E7%BB%8D/'>
+<link rel='canonical' href='https://example.com/p/ospf%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/'>
 
-<link rel="stylesheet" href="/scss/style.min.946cca6c6259ef94ac55abfae7c7bf3291ea3ed5eea17ef77500b257217c6710.css"><meta property='og:title' content="Roce介绍">
-<meta property='og:description' content="RoCE 什么是RoCE？ 全称RDMA over Converged Ethernet，RoCE是一种基于以太网的远程直接内存访问（RDMA）技术，旨在通过优化协议栈和硬件卸载，实现高性能、低延迟的数据传输。其核心是通过绕过操作系统内核，减少数据复制和CPU开销，尤其适用于AI训练、超算和分布式存储等场景。\n">
-<meta property='og:url' content='https://example.com/p/roce%E4%BB%8B%E7%BB%8D/'>
+<link rel="stylesheet" href="/scss/style.min.946cca6c6259ef94ac55abfae7c7bf3291ea3ed5eea17ef77500b257217c6710.css"><meta property='og:title' content="OSPF协议详解">
+<meta property='og:description' content="好的，我们来详细解析一下 OSPF（Open Shortest Path First） 协议。它是网络协议栈中非常重要的内部网关协议（IGP），用于在单一自治系统（AS） 内部的路由器之间动态地交换路由信息并计算最优路径。\n">
+<meta property='og:url' content='https://example.com/p/ospf%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/'>
 <meta property='og:site_name' content='star‘s Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='roce' /><meta property='article:tag' content='rdma' /><meta property='article:published_time' content='2025-07-22T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2025-07-22T00:00:00&#43;00:00'/>
-<meta name="twitter:title" content="Roce介绍">
-<meta name="twitter:description" content="RoCE 什么是RoCE？ 全称RDMA over Converged Ethernet，RoCE是一种基于以太网的远程直接内存访问（RDMA）技术，旨在通过优化协议栈和硬件卸载，实现高性能、低延迟的数据传输。其核心是通过绕过操作系统内核，减少数据复制和CPU开销，尤其适用于AI训练、超算和分布式存储等场景。\n">
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='ospf' /><meta property='article:tag' content='数据中心' /><meta property='article:published_time' content='2025-07-29T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2025-07-29T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="OSPF协议详解">
+<meta name="twitter:description" content="好的，我们来详细解析一下 OSPF（Open Shortest Path First） 协议。它是网络协议栈中非常重要的内部网关协议（IGP），用于在单一自治系统（AS） 内部的路由器之间动态地交换路由信息并计算最优路径。\n">
     </head>
     <body class="
     article-page
@@ -259,15 +259,10 @@
         <div class="widget--toc">
             <nav id="TableOfContents">
   <ol>
-    <li><a href="#roce">RoCE</a>
-      <ol>
-        <li><a href="#什么是roce">什么是RoCE？</a></li>
-        <li><a href="#rocev1"><strong>RoCEv1</strong></a></li>
-        <li><a href="#rocev2">RoCEv2</a></li>
-        <li><a href="#rocev2的普及性"><strong>RoCEv2的普及性</strong></a></li>
-        <li><a href="#对比infiniband"><strong>对比InfiniBand</strong></a></li>
-      </ol>
-    </li>
+    <li><a href="#核心定位与目标">核心定位与目标</a></li>
+    <li><a href="#关键特性和概念">关键特性和概念</a></li>
+    <li><a href="#ospf-工作流程概览">OSPF 工作流程概览</a></li>
+    <li><a href="#总结">总结</a></li>
   </ol>
 </nav>
         </div>
@@ -295,7 +290,7 @@
 
     <div class="article-title-wrapper">
         <h2 class="article-title">
-            <a href="/p/roce%E4%BB%8B%E7%BB%8D/">Roce介绍</a>
+            <a href="/p/ospf%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/">OSPF协议详解</a>
         </h2>
     
         
@@ -317,7 +312,7 @@
   <path d="M3 11h16" />
   <path d="M18 16.496v1.504l1 1" />
 </svg>
-                <time class="article-time--published">Jul 22, 2025</time>
+                <time class="article-time--published">Jul 29, 2025</time>
             </div>
         
 
@@ -332,7 +327,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 3 分钟
+                    阅读时长: 5 分钟
                 </time>
             </div>
         
@@ -347,71 +342,89 @@
     <section class="article-content">
     
     
-    <h2 id="roce">RoCE
-</h2><h3 id="什么是roce">什么是RoCE？
-</h3><p>全称RDMA over Converged Ethernet，RoCE是一种基于以太网的远程直接内存访问（RDMA）技术，旨在通过优化协议栈和硬件卸载，实现高性能、低延迟的数据传输。其核心是通过绕过操作系统内核，减少数据复制和CPU开销，尤其适用于AI训练、超算和分布式存储等场景。</p>
-<p>从 2010 年开始，RMDA 开始引起越来越多的关注，当时IBTA发布了第一个在融合以太网 (RoCE) 上运行 RMDA 的规范。然而，最初的规范将 RoCE 部署限制在单个第 2 层域，因为 RoCE 封装帧没有路由功能。2014 年，IBTA 发布了 RoCEv2，它更新了最初的 RoCE 规范以支持跨第 3 层网络的路由，使其更适合超大规模数据中心网络和企业数据中心等。</p>
-<h3 id="rocev1"><strong>RoCEv1</strong>
-</h3><p>2010年4月，IBTA发布了RoCE，此标准是作为Infiniband Architecture Specification的附加件发布的，所以也称为IBoE（InfiniBand over Ethernet）。这时的RoCE标准是在以太链路层之上用IB网络层代替了TCP/IP网络层，所以不支持IP路由功能。RoCE V1协议在以太层的typeID是0x8915。</p>
-<p>在RoCE中，infiniband的链路层协议头被去掉，用来表示地址的GUID被转换成以太网的MAC。Infiniband依赖于无损的物理传输，RoCE也同样依赖于无损的以太传输，这一要求会给以太网的部署带来了成本和管理上的开销。</p>
-<p>以太网的无损传输必须依靠L2的QoS支持，比如PFC(Priority Flow Control)，接收端在buffer池超过阈值时会向发送方发出pause帧，发送方MAC层在收到pause帧后，自动降低发送速率。这一要求，意味着整个传输环节上的所有节点包括end、switch、router，都必须全部支持L2 QoS，否则链路上的PFC就不能在两端发挥有效作用。</p>
-<h3 id="rocev2">RoCEv2
-</h3><p>由于RoCEv1的数据帧不带IP头部，所以只能在L2子网内通信。为了解决此问题，IBTA于2014年提出了RoCE V2，RoCEv2扩展了RoCEv1，将GRH(Global Routing Header)换成UDP header +　IP header，扩展后的帧结构如下图所示。</p>
-<p>针对RoCE v1和RoCE v2，以下两点值得注意：</p>
-<ul>
-<li>RoCE v1(Layer 2)运作在Ethernet Link Layer(Layer 2)所以Ethertype 0x8915，所以正常的Frame大小为1500 bytes，而Jumbo Frame则是9000 bytes。</li>
-<li>RoCE v2(Layer 3)运作在UDP/IPv4或UDP/IPv6之上(Layer 3)，采用UDP Port 4791进行传输。因为 RoCE v2的封包是在 Layer 3上可进行路由，所以有时又会称为Routable RoCE或简称RRoCE。</li>
+    <p>好的，我们来详细解析一下 <strong>OSPF（Open Shortest Path First）</strong> 协议。它是网络协议栈中非常重要的<strong>内部网关协议（IGP）</strong>，用于在<strong>单一自治系统（AS）</strong> 内部的路由器之间动态地交换路由信息并计算最优路径。</p>
+<h2 id="核心定位与目标">核心定位与目标
+</h2><ul>
+<li><strong>类型：</strong> 链路状态路由协议（Link-State Routing Protocol）。这是理解 OSPF 的关键。</li>
+<li><strong>目标：</strong> 让 AS 内部的所有路由器都拥有一张<strong>完全相同</strong>的、描述整个 AS 网络拓扑结构的“地图”（链路状态数据库 - LSDB），并基于此地图独立地使用 <strong>SPF（Shortest Path First，即 Dijkstra）算法</strong> 计算出到达 AS 内所有网络的最短（最优）路径树，最终形成路由表。</li>
+<li><strong>对比 RIP：</strong> 相比距离矢量协议（如 RIP），OSPF 收敛速度快得多（网络变化时路由信息快速稳定），支持大型网络（通过区域划分），无路由环路（由 SPF 算法保证），支持 VLSM 和 CIDR，提供更丰富的路由度量（Cost）。</li>
 </ul>
-<p><img src="/img/roce.png"
-	
-	
-	
-	loading="lazy"
-	
-		alt="image.png"
-	
-	
-></p>
-<h3 id="rocev2的普及性"><strong>RoCEv2的普及性</strong>
-</h3><p><strong>生态成熟度</strong>：国内云计算与AI企业（如阿里云、腾讯云、华为云）普遍采用RoCEv2，因其兼容现有以太网架构且性价比高。例如，华为鲲鹏920芯片已支持100Gbps RoCE，并在数据中心部署中实现<strong>端到端延迟5-10μs</strong>。</p>
-<p><strong>应用场景</strong>：大规模AI训练（如千卡级集群）和分布式存储（如EMC Isilon）通过RoCEv2优化通信效率，实际带宽利用率达<strong>90%以上</strong>（400G以太网实测360Gbps）。</p>
-<h3 id="对比infiniband"><strong>对比InfiniBand</strong>
-</h3><div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th>维度</th>
-          <th>RoCEv2</th>
-          <th>InfiniBand</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>协议栈</td>
-          <td>基于UDP/IP的以太网扩展</td>
-          <td>专用协议栈（物理层到传输层独立设计）</td>
-      </tr>
-      <tr>
-          <td>部署成本</td>
-          <td>利用现有以太网设备，成本低</td>
-          <td>需专用交换机和网卡，成本高</td>
-      </tr>
-      <tr>
-          <td>扩展性</td>
-          <td>支持三层路由，扩展性强</td>
-          <td>依赖子网管理器（SM），集中式管理</td>
-      </tr>
-      <tr>
-          <td>性能</td>
-          <td>延迟略高（微秒级），吞吐量接近IB</td>
-          <td>超低延迟（纳秒级），吞吐量更高</td>
-      </tr>
-      <tr>
-          <td>适用场景</td>
-          <td>通用数据中心、云计算、AI训练</td>
-          <td>超算中心、极致性能要求的HPC环境</td>
-      </tr>
-  </tbody>
-</table></div>
+<h2 id="关键特性和概念">关键特性和概念
+</h2><ol>
+<li>
+<p><strong>链路状态（Link-State）：</strong></p>
+<ul>
+<li>每个路由器不再像 RIP 那样只告诉邻居“我到某个网络的距离是多少”，而是主动<strong>描述自己直连的网络状态</strong>。</li>
+<li>这个描述信息称为 <strong>LSA（Link State Advertisement - 链路状态通告）</strong>。它包含的信息如：该路由器连接了哪些网络、邻居路由器是谁、连接到这些链路/邻居的“代价（Cost）”是多少。</li>
+<li>路由器将生成的 LSA <strong>泛洪（Flooding）</strong> 给 OSPF 域内的<strong>所有其他路由器</strong>（在区域限制内）。</li>
+</ul>
+</li>
+<li>
+<p><strong>链路状态数据库（LSDB - Link State Database）：</strong></p>
+<ul>
+<li>每个路由器收到域内所有其他路由器发来的 LSA 后，会把这些 LSA 存储在自己的 LSDB 中。</li>
+<li>理想情况下，<strong>同一个区域（Area）内所有路由器的 LSDB 内容是完全一致的</strong>。这是路由器能独立、一致地计算最短路径树的基础。</li>
+</ul>
+</li>
+<li>
+<p><strong>SPF（Dijkstra）算法：</strong></p>
+<ul>
+<li>每个路由器都<strong>独立</strong>地以自己的视角（作为根）运行 SPF 算法。</li>
+<li>算法基于 LSDB 中存储的完整拓扑信息（节点=路由器/网络，边=链路，边权=Cost），计算出一棵到达所有目标网络的最短路径树（SPT - Shortest Path Tree）。</li>
+<li>这棵树上的路径就是该路由器认为的到达各网络的最优无环路径。</li>
+<li>计算完成后，最优路径被安装到路由表中。</li>
+</ul>
+</li>
+<li>
+<p><strong>区域（Area）划分：</strong></p>
+<ul>
+<li>为了解决大型网络 LSDB 过大、SPF 计算负担过重、LSA 泛洪范围过广的问题，OSPF 引入了<strong>层次化结构</strong> - <strong>区域</strong>。</li>
+<li><strong>骨干区域（Area 0）：</strong> OSPF 域的核心。<strong>所有其他区域（非骨干区域）必须直接连接到骨干区域</strong>。骨干区域负责在非骨干区域之间传递路由信息。区域 0 的 LSDB 包含所有区域的汇总路由信息。</li>
+<li><strong>非骨干区域（Area 1, Area 2, etc）：</strong> 内部路由器的 LSDB 只包含本区域的详细拓扑信息和来自其他区域的<strong>汇总路由信息</strong>（由 ABR 生成）。这大大减小了 LSDB 的规模，限制了 LSA 泛洪的范围，提高了网络的扩展性和稳定性。</li>
+<li><strong>区域边界路由器（ABR - Area Border Router）：</strong> 连接多个区域（至少一个区域是 Area 0）的路由器。它负责：
+<ul>
+<li>将其连接区域的内部路由信息<strong>汇总</strong>后通告到骨干区域。</li>
+<li>将骨干区域学到的其他区域的汇总路由信息（以及外部路由）通告到其连接的非骨干区域。</li>
+<li>维护所连接每个区域的独立 LSDB。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>邻居和邻接关系建立：</strong></p>
+<ul>
+<li><strong>邻居（Neighbor）：</strong> 通过 Hello 协议发现的、连接在同一链路上的其他 OSPF 路由器。两台路由器交换 Hello 包，确认参数（如 Area ID, Hello/Dead Interval, 认证密码等）匹配后成为邻居。</li>
+<li><strong>邻接（Adjacency）：</strong> 在邻居关系基础上，需要<strong>同步 LSDB</strong> 的路由器对之间建立邻接关系。只有建立了邻接关系的路由器才会交换 LSA。</li>
+<li><strong>建立过程关键状态：</strong>
+<ul>
+<li><strong>Down -&gt; Init：</strong> 收到邻居的 Hello 包（包中没有包含自己的 Router ID）。</li>
+<li><strong>Init -&gt; 2-Way：</strong> 收到邻居的 Hello 包（包中已包含自己的 Router ID）。<strong>选举 DR/BDR（如果需要）</strong>。</li>
+<li><strong>2-Way -&gt; ExStart：</strong> （仅与 DR/BDR 或点对点链路上的邻居）协商主从关系和初始 DD 序列号。</li>
+<li><strong>ExStart -&gt; Exchange：</strong> 交换 DBD 包（Database Description），描述自己 LSDB 的摘要（LSA 头部）。</li>
+<li><strong>Exchange -&gt; Loading：</strong> 通过 LSR（Link State Request）请求和 LSU（Link State Update）发送自己缺少的或更新的完整 LSA。</li>
+<li><strong>Loading -&gt; Full：</strong> LSDB 同步完成，邻接关系建立成功。开始定期发送 Hello 包维护邻居关系，并泛洪 LSA 更新。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="ospf-工作流程概览">OSPF 工作流程概览
+</h2><ol>
+<li><strong>启动与邻居发现：</strong> 路由器在接口启用 OSPF，开始发送 Hello 包。发现邻居。</li>
+<li><strong>邻接关系建立与 LSDB 同步：</strong> 与符合条件的邻居（如 DR/BDR 或点对点邻居）建立邻接，交换 DBD、LSR、LSU 包，同步 LSDB。</li>
+<li><strong>维护 LSDB：</strong>
+<ul>
+<li>当本地链路状态发生变化（如接口 Up/Down，Cost 改变），路由器产生新的 LSA。</li>
+<li>新的 LSA 被泛洪给所有建立了邻接关系的邻居。</li>
+<li>邻居收到新 LSA 后，更新自己的 LSDB，并继续泛洪（除始发路由器外），同时<strong>立即</strong>触发一次 SPF 计算（部分计算或完全计算，取决于 LSA 类型）。</li>
+<li>定期发送 LSA（老化时间默认为 30 分钟），收到后会刷新老化计时器。</li>
+</ul>
+</li>
+<li><strong>路由计算：</strong> 路由器使用 SPF 算法基于最新的 LSDB 计算最短路径树，将最优路径安装到路由表中。</li>
+<li><strong>维护邻居关系：</strong> 通过周期性的 Hello 包（默认 10 秒/30 秒 Dead）维护邻居关系。若在 Dead Interval 内未收到邻居的 Hello 包，则认为邻居失效，清除邻接关系，移除该邻居产生的 LSA，触发新的 SPF 计算。</li>
+</ol>
+<h2 id="总结">总结
+</h2><p>OSPF 是一个强大、复杂且高度可扩展的链路状态内部网关协议。其核心在于每个路由器都拥有相同的网络拓扑地图（LSDB），并独立运行 SPF 算法计算无环的最短路径。通过区域划分解决了大型网络的可扩展性问题。理解 LSA 的类型和作用、邻居/邻接建立过程、DR/BDR 角色、区域概念（尤其是 Area 0）以及 SPF 计算原理是掌握 OSPF 的关键。虽然配置和设计比 RIP 复杂，但其快速收敛、无环、可扩展的特性使其成为现代企业网和数据中心内部网络路由的首选协议之一。</p>
 
 </section>
 
@@ -420,9 +433,9 @@
     
     <section class="article-tags">
         
-            <a href="/tags/roce/">Roce</a>
+            <a href="/tags/ospf/">Ospf</a>
         
-            <a href="/tags/rdma/">Rdma</a>
+            <a href="/tags/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83/">数据中心</a>
         
     </section>
 
@@ -456,12 +469,12 @@
             
                 
 <article class="">
-    <a href="/p/ospf%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/">
+    <a href="/p/roce%E4%BB%8B%E7%BB%8D/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">OSPF协议详解</h2>
+            <h2 class="article-title">Roce介绍</h2>
         </div>
     </a>
 </article>
