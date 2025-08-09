@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>组播 on star‘s Blog</title>
+        <link>https://example.com/tags/%E7%BB%84%E6%92%AD/</link>
+        <description>Recent content in 组播 on star‘s Blog</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <copyright>Example Person</copyright>
+        <lastBuildDate>Sat, 09 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://example.com/tags/%E7%BB%84%E6%92%AD/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>组播igmp协议详解</title>
+        <link>https://example.com/p/%E7%BB%84%E6%92%ADigmp%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/</link>
+        <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
+        
+        <guid>https://example.com/p/%E7%BB%84%E6%92%ADigmp%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/</guid>
+        <description>&lt;p&gt;组播 IGMP 协议详解&lt;/p&gt;
+&lt;p&gt;在日常的网络传输中，我们最常听到的就是 &lt;strong&gt;单播（Unicast）&lt;/strong&gt; 和 &lt;strong&gt;广播（Broadcast）&lt;/strong&gt;。单播就像你给朋友单独发一条微信，只发给他一个人；广播则像在微信群里吼一嗓子，所有人都能看到。&lt;br&gt;
+那 &lt;strong&gt;组播（Multicast）&lt;/strong&gt; 呢？它更像是&lt;strong&gt;建立一个兴趣小组，只有加入这个小组的人才能收到你发的内容&lt;/strong&gt;。而 IGMP（Internet Group Management Protocol）就是负责“管理小组成员”的协议。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;一igmp-是什么&#34;&gt;一、IGMP 是什么？
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;IGMP（Internet Group Management Protocol）&lt;/strong&gt; 是 IPv4 网络中用于&lt;strong&gt;管理组播组成员关系&lt;/strong&gt;的协议。&lt;br&gt;
+简单来说，它帮助网络设备（尤其是路由器）知道：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;哪些主机想加入某个组播组&lt;/li&gt;
+&lt;li&gt;哪些主机不再需要组播数据&lt;/li&gt;
+&lt;li&gt;当前有哪些活跃的组播成员&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;它工作在 &lt;strong&gt;网络层&lt;/strong&gt;，但&lt;strong&gt;运行在主机和相邻路由器之间&lt;/strong&gt;，并不会跨越多个路由器去传播。&lt;/p&gt;
+&lt;h3 id=&#34;二组播的实际例子&#34;&gt;二、组播的实际例子
+&lt;/h3&gt;&lt;p&gt;想象一下，你所在的公司要直播一场全员大会。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果用单播，每个员工的电脑都要跟服务器建立一条独立的连接，这会让服务器压力山大。&lt;/li&gt;
+&lt;li&gt;如果用广播，虽然省事，但不仅公司员工，连打印机、考勤机这些设备也会被迫收到直播数据（没用还浪费带宽）。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;用组播就完美了&lt;/strong&gt;：只有主动“加入直播组”的员工电脑才能收到直播视频数据，其他设备完全不受影响。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这个“加入直播组”的过程，就是通过 &lt;strong&gt;IGMP 协议&lt;/strong&gt; 来实现的。&lt;/p&gt;
+&lt;h3 id=&#34;三igmp-的工作机制&#34;&gt;三、IGMP 的工作机制
+&lt;/h3&gt;&lt;p&gt;IGMP 的运作过程，核心就是&lt;strong&gt;三种报文&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Membership Query（成员查询）&lt;/strong&gt;&lt;br&gt;
+由路由器发出，询问“大家谁还在某个组播组里？”&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Membership Report（成员报告）&lt;/strong&gt;&lt;br&gt;
+由主机发出，表示“我还在某个组里，请继续给我发数据。”&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Leave Group（离开组）&lt;/strong&gt;&lt;br&gt;
+由主机发出，表示“我不看这个组播数据了，可以停了。”&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;四igmp-的版本演进&#34;&gt;四、IGMP 的版本演进
+&lt;/h3&gt;&lt;p&gt;IGMP 目前有三个版本，每一代都比上一代更智能。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;IGMPv1&lt;/strong&gt;（最基础）
+&lt;ul&gt;
+&lt;li&gt;主机可以加入组播组，但没有“离开组”的机制，需要路由器超时后才会停止发送数据。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;IGMPv2&lt;/strong&gt;（更高效）
+&lt;ul&gt;
+&lt;li&gt;增加了 &lt;code&gt;Leave Group&lt;/code&gt; 报文，可以主动告诉路由器自己不再需要数据。&lt;/li&gt;
+&lt;li&gt;支持指定组的查询，提高了管理效率。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;IGMPv3&lt;/strong&gt;（更灵活）
+&lt;ul&gt;
+&lt;li&gt;支持 &lt;strong&gt;源特定组播（SSM）&lt;/strong&gt;，即只接收来自特定源 IP 的组播数据，安全性和精准度更高。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;五用例场景再深入一点&#34;&gt;五、用例场景再深入一点
+&lt;/h3&gt;&lt;p&gt;我们回到公司的直播例子。&lt;/p&gt;
+&lt;p&gt;假设公司 IT 部署了组播路由器，并分配了一个组播地址 &lt;strong&gt;239.1.1.1&lt;/strong&gt; 作为“全员大会直播”频道：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;当你打开直播软件时，软件会通过 &lt;strong&gt;IGMP Report&lt;/strong&gt; 告诉路由器：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“我要加入 239.1.1.1 组，请把数据发给我。”&lt;/p&gt;&lt;/blockquote&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;路由器记录下来，并把直播视频数据转发到你的电脑。&lt;/li&gt;
+&lt;li&gt;当直播结束，你关闭软件，软件会发一个 &lt;strong&gt;Leave Group&lt;/strong&gt; 给路由器：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“我退出 239.1.1.1 组了，可以停发给我。”&lt;/p&gt;&lt;/blockquote&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;如果有很多人退出，路由器可能会发 &lt;strong&gt;Membership Query&lt;/strong&gt; 确认是否还有人需要这个直播数据，如果没人了，就停止该组播数据的转发。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这样一来，&lt;strong&gt;服务器只需要发一份直播流到路由器，路由器再复制给组内成员&lt;/strong&gt;，比单播节省了大量带宽，也避免广播的无差别轰炸。&lt;/p&gt;
+&lt;h3 id=&#34;六igmp-与其他协议的关系&#34;&gt;六、IGMP 与其他协议的关系
+&lt;/h3&gt;&lt;p&gt;IGMP 只是组播管理的**“前台登记员”**，真正负责组播转发的，是像 &lt;strong&gt;PIM（Protocol Independent Multicast）&lt;/strong&gt; 这样的路由协议。&lt;br&gt;
+可以这么理解：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;IGMP&lt;/strong&gt;：负责“谁在看这个频道”&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;PIM&lt;/strong&gt;：负责“把频道信号送到这些人手里”&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;两者配合，才能让组播数据准确高效地送达。&lt;/p&gt;
+&lt;h3 id=&#34;七总结&#34;&gt;七、总结
+&lt;/h3&gt;&lt;p&gt;IGMP 协议虽然听起来是个小角色，但在组播体系中它就像一个&lt;strong&gt;观众登记系统&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;它让路由器知道谁需要组播数据，谁已经离开&lt;/li&gt;
+&lt;li&gt;它帮助节省带宽、减少无效数据传输&lt;/li&gt;
+&lt;li&gt;它的版本升级让组播管理更加高效和安全&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;下一次你在公司看直播、在局域网玩联机游戏、或者家里 IPTV 看电视时，很可能后台就有 IGMP 在悄悄帮你管理数据流。&lt;br&gt;
+所以，虽然它的存在感不高，但没有它，组播的世界就会变得一团糟。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
