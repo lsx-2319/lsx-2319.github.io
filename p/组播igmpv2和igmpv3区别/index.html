@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="好的，我们来详细解析一下 OSPF（Open Shortest Path First） 协议。它是网络协议栈中非常重要的内部网关协议（IGP），用于在单一自治系统（AS） 内部的路由器之间动态地交换路由信息并计算最优路径。\n">
-<title>OSPF协议详解</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="IGMPv2 vs IGMPv3：你的组播网络该升级了吗？ 场景： 办公室里，小王正对着卡成PPT的直播培训抓狂，隔壁组的4K监控大屏却流畅无比。网管老张神秘一笑：“想知道秘密？关键在于组播协议的选择！”\n">
+<title>组播igmpv2和igmpv3区别</title>
 
-<link rel='canonical' href='https://example.com/p/ospf%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/'>
+<link rel='canonical' href='https://example.com/p/%E7%BB%84%E6%92%ADigmpv2%E5%92%8Cigmpv3%E5%8C%BA%E5%88%AB/'>
 
-<link rel="stylesheet" href="/scss/style.min.946cca6c6259ef94ac55abfae7c7bf3291ea3ed5eea17ef77500b257217c6710.css"><meta property='og:title' content="OSPF协议详解">
-<meta property='og:description' content="好的，我们来详细解析一下 OSPF（Open Shortest Path First） 协议。它是网络协议栈中非常重要的内部网关协议（IGP），用于在单一自治系统（AS） 内部的路由器之间动态地交换路由信息并计算最优路径。\n">
-<meta property='og:url' content='https://example.com/p/ospf%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/'>
+<link rel="stylesheet" href="/scss/style.min.946cca6c6259ef94ac55abfae7c7bf3291ea3ed5eea17ef77500b257217c6710.css"><meta property='og:title' content="组播igmpv2和igmpv3区别">
+<meta property='og:description' content="IGMPv2 vs IGMPv3：你的组播网络该升级了吗？ 场景： 办公室里，小王正对着卡成PPT的直播培训抓狂，隔壁组的4K监控大屏却流畅无比。网管老张神秘一笑：“想知道秘密？关键在于组播协议的选择！”\n">
+<meta property='og:url' content='https://example.com/p/%E7%BB%84%E6%92%ADigmpv2%E5%92%8Cigmpv3%E5%8C%BA%E5%88%AB/'>
 <meta property='og:site_name' content='star‘s Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='ospf' /><meta property='article:tag' content='数据中心' /><meta property='article:published_time' content='2025-07-29T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2025-07-29T00:00:00&#43;00:00'/>
-<meta name="twitter:title" content="OSPF协议详解">
-<meta name="twitter:description" content="好的，我们来详细解析一下 OSPF（Open Shortest Path First） 协议。它是网络协议栈中非常重要的内部网关协议（IGP），用于在单一自治系统（AS） 内部的路由器之间动态地交换路由信息并计算最优路径。\n">
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='组播' /><meta property='article:tag' content='igmp' /><meta property='article:published_time' content='2025-08-17T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2025-08-17T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="组播igmpv2和igmpv3区别">
+<meta name="twitter:description" content="IGMPv2 vs IGMPv3：你的组播网络该升级了吗？ 场景： 办公室里，小王正对着卡成PPT的直播培训抓狂，隔壁组的4K监控大屏却流畅无比。网管老张神秘一笑：“想知道秘密？关键在于组播协议的选择！”\n">
     </head>
     <body class="
     article-page
@@ -259,10 +259,16 @@
         <div class="widget--toc">
             <nav id="TableOfContents">
   <ol>
-    <li><a href="#核心定位与目标">核心定位与目标</a></li>
-    <li><a href="#关键特性和概念">关键特性和概念</a></li>
-    <li><a href="#ospf-工作流程概览">OSPF 工作流程概览</a></li>
-    <li><a href="#总结">总结</a></li>
+    <li><a href="#igmpv2-vs-igmpv3你的组播网络该升级了吗">IGMPv2 vs IGMPv3：你的组播网络该升级了吗？</a>
+      <ol>
+        <li><a href="#-核心任务举手报名我想看这个频道">📌 核心任务：举手报名“我想看这个频道！”</a></li>
+        <li><a href="#igmpv2基础版大锅饭频道订阅">IGMPv2：基础版“大锅饭”频道订阅</a></li>
+        <li><a href="#-igmpv3升级版精准点播源过滤">🚀 IGMPv3：升级版“精准点播”源过滤</a></li>
+        <li><a href="#-igmpv2-与-igmpv3-核心差异速查表">📊 IGMPv2 与 IGMPv3 核心差异速查表</a></li>
+        <li><a href="#-为什么你需要关心igmpv3">🧠 为什么你需要关心IGMPv3？</a></li>
+        <li><a href="#-总结升级你的组播沟通语言">💡 总结：升级你的组播“沟通语言”</a></li>
+      </ol>
+    </li>
   </ol>
 </nav>
         </div>
@@ -290,7 +296,7 @@
 
     <div class="article-title-wrapper">
         <h2 class="article-title">
-            <a href="/p/ospf%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/">OSPF协议详解</a>
+            <a href="/p/%E7%BB%84%E6%92%ADigmpv2%E5%92%8Cigmpv3%E5%8C%BA%E5%88%AB/">组播igmpv2和igmpv3区别</a>
         </h2>
     
         
@@ -312,7 +318,7 @@
   <path d="M3 11h16" />
   <path d="M18 16.496v1.504l1 1" />
 </svg>
-                <time class="article-time--published">Jul 29, 2025</time>
+                <time class="article-time--published">Aug 17, 2025</time>
             </div>
         
 
@@ -327,7 +333,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 5 分钟
+                    阅读时长: 4 分钟
                 </time>
             </div>
         
@@ -342,89 +348,122 @@
     <section class="article-content">
     
     
-    <p>好的，我们来详细解析一下 <strong>OSPF（Open Shortest Path First）</strong> 协议。它是网络协议栈中非常重要的<strong>内部网关协议（IGP）</strong>，用于在<strong>单一自治系统（AS）</strong> 内部的路由器之间动态地交换路由信息并计算最优路径。</p>
-<h2 id="核心定位与目标">核心定位与目标
-</h2><ul>
-<li><strong>类型：</strong> 链路状态路由协议（Link-State Routing Protocol）。这是理解 OSPF 的关键。</li>
-<li><strong>目标：</strong> 让 AS 内部的所有路由器都拥有一张<strong>完全相同</strong>的、描述整个 AS 网络拓扑结构的“地图”（链路状态数据库 - LSDB），并基于此地图独立地使用 <strong>SPF（Shortest Path First，即 Dijkstra）算法</strong> 计算出到达 AS 内所有网络的最短（最优）路径树，最终形成路由表。</li>
-<li><strong>对比 RIP：</strong> 相比距离矢量协议（如 RIP），OSPF 收敛速度快得多（网络变化时路由信息快速稳定），支持大型网络（通过区域划分），无路由环路（由 SPF 算法保证），支持 VLSM 和 CIDR，提供更丰富的路由度量（Cost）。</li>
-</ul>
-<h2 id="关键特性和概念">关键特性和概念
-</h2><ol>
-<li>
-<p><strong>链路状态（Link-State）：</strong></p>
-<ul>
-<li>每个路由器不再像 RIP 那样只告诉邻居“我到某个网络的距离是多少”，而是主动<strong>描述自己直连的网络状态</strong>。</li>
-<li>这个描述信息称为 <strong>LSA（Link State Advertisement - 链路状态通告）</strong>。它包含的信息如：该路由器连接了哪些网络、邻居路由器是谁、连接到这些链路/邻居的“代价（Cost）”是多少。</li>
-<li>路由器将生成的 LSA <strong>泛洪（Flooding）</strong> 给 OSPF 域内的<strong>所有其他路由器</strong>（在区域限制内）。</li>
-</ul>
-</li>
-<li>
-<p><strong>链路状态数据库（LSDB - Link State Database）：</strong></p>
-<ul>
-<li>每个路由器收到域内所有其他路由器发来的 LSA 后，会把这些 LSA 存储在自己的 LSDB 中。</li>
-<li>理想情况下，<strong>同一个区域（Area）内所有路由器的 LSDB 内容是完全一致的</strong>。这是路由器能独立、一致地计算最短路径树的基础。</li>
-</ul>
-</li>
-<li>
-<p><strong>SPF（Dijkstra）算法：</strong></p>
-<ul>
-<li>每个路由器都<strong>独立</strong>地以自己的视角（作为根）运行 SPF 算法。</li>
-<li>算法基于 LSDB 中存储的完整拓扑信息（节点=路由器/网络，边=链路，边权=Cost），计算出一棵到达所有目标网络的最短路径树（SPT - Shortest Path Tree）。</li>
-<li>这棵树上的路径就是该路由器认为的到达各网络的最优无环路径。</li>
-<li>计算完成后，最优路径被安装到路由表中。</li>
-</ul>
-</li>
-<li>
-<p><strong>区域（Area）划分：</strong></p>
-<ul>
-<li>为了解决大型网络 LSDB 过大、SPF 计算负担过重、LSA 泛洪范围过广的问题，OSPF 引入了<strong>层次化结构</strong> - <strong>区域</strong>。</li>
-<li><strong>骨干区域（Area 0）：</strong> OSPF 域的核心。<strong>所有其他区域（非骨干区域）必须直接连接到骨干区域</strong>。骨干区域负责在非骨干区域之间传递路由信息。区域 0 的 LSDB 包含所有区域的汇总路由信息。</li>
-<li><strong>非骨干区域（Area 1, Area 2, etc）：</strong> 内部路由器的 LSDB 只包含本区域的详细拓扑信息和来自其他区域的<strong>汇总路由信息</strong>（由 ABR 生成）。这大大减小了 LSDB 的规模，限制了 LSA 泛洪的范围，提高了网络的扩展性和稳定性。</li>
-<li><strong>区域边界路由器（ABR - Area Border Router）：</strong> 连接多个区域（至少一个区域是 Area 0）的路由器。它负责：
-<ul>
-<li>将其连接区域的内部路由信息<strong>汇总</strong>后通告到骨干区域。</li>
-<li>将骨干区域学到的其他区域的汇总路由信息（以及外部路由）通告到其连接的非骨干区域。</li>
-<li>维护所连接每个区域的独立 LSDB。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p><strong>邻居和邻接关系建立：</strong></p>
-<ul>
-<li><strong>邻居（Neighbor）：</strong> 通过 Hello 协议发现的、连接在同一链路上的其他 OSPF 路由器。两台路由器交换 Hello 包，确认参数（如 Area ID, Hello/Dead Interval, 认证密码等）匹配后成为邻居。</li>
-<li><strong>邻接（Adjacency）：</strong> 在邻居关系基础上，需要<strong>同步 LSDB</strong> 的路由器对之间建立邻接关系。只有建立了邻接关系的路由器才会交换 LSA。</li>
-<li><strong>建立过程关键状态：</strong>
-<ul>
-<li><strong>Down -&gt; Init：</strong> 收到邻居的 Hello 包（包中没有包含自己的 Router ID）。</li>
-<li><strong>Init -&gt; 2-Way：</strong> 收到邻居的 Hello 包（包中已包含自己的 Router ID）。<strong>选举 DR/BDR（如果需要）</strong>。</li>
-<li><strong>2-Way -&gt; ExStart：</strong> （仅与 DR/BDR 或点对点链路上的邻居）协商主从关系和初始 DD 序列号。</li>
-<li><strong>ExStart -&gt; Exchange：</strong> 交换 DBD 包（Database Description），描述自己 LSDB 的摘要（LSA 头部）。</li>
-<li><strong>Exchange -&gt; Loading：</strong> 通过 LSR（Link State Request）请求和 LSU（Link State Update）发送自己缺少的或更新的完整 LSA。</li>
-<li><strong>Loading -&gt; Full：</strong> LSDB 同步完成，邻接关系建立成功。开始定期发送 Hello 包维护邻居关系，并泛洪 LSA 更新。</li>
-</ul>
-</li>
-</ul>
-</li>
+    <h2 id="igmpv2-vs-igmpv3你的组播网络该升级了吗">IGMPv2 vs IGMPv3：你的组播网络该升级了吗？
+</h2><p><strong>场景：</strong> 办公室里，小王正对着卡成PPT的直播培训抓狂，隔壁组的4K监控大屏却流畅无比。网管老张神秘一笑：“想知道秘密？关键在于组播协议的选择！”</p>
+<p>没错，当海量设备需要<strong>同时接收同一份数据</strong>（比如视频流、在线会议），单播（点对点）广播（无差别轰炸）都会拖垮网络。<strong>组播（Multicast）</strong> 才是高效解决方案，而 <strong>IGMP（Internet Group Management Protocol）</strong> 就是设备与路由器间沟通“谁想看什么频道”的核心语言。今天我们就来拆解最常用的两个版本：<strong>IGMPv2 和 IGMPv3</strong>。</p>
+<h3 id="-核心任务举手报名我想看这个频道">📌 核心任务：举手报名“我想看这个频道！”
+</h3><p>无论是v2还是v3，核心任务一致：</p>
+<ol>
+<li><strong>设备（成员）</strong> 告诉本地路由器：“我要加入XX组播组（频道）！”</li>
+<li><strong>路由器</strong> 负责将组播流转发给所有“报名”的设备；</li>
+<li>设备不想看了，通知路由器：“我退出了！”</li>
 </ol>
-<h2 id="ospf-工作流程概览">OSPF 工作流程概览
-</h2><ol>
-<li><strong>启动与邻居发现：</strong> 路由器在接口启用 OSPF，开始发送 Hello 包。发现邻居。</li>
-<li><strong>邻接关系建立与 LSDB 同步：</strong> 与符合条件的邻居（如 DR/BDR 或点对点邻居）建立邻接，交换 DBD、LSR、LSU 包，同步 LSDB。</li>
-<li><strong>维护 LSDB：</strong>
+<p><strong>区别在于“报名”和“退出”的精细程度和效率！</strong></p>
+<h3 id="igmpv2基础版大锅饭频道订阅">IGMPv2：基础版“大锅饭”频道订阅
+</h3><p>想象一个老式收音机📻：</p>
 <ul>
-<li>当本地链路状态发生变化（如接口 Up/Down，Cost 改变），路由器产生新的 LSA。</li>
-<li>新的 LSA 被泛洪给所有建立了邻接关系的邻居。</li>
-<li>邻居收到新 LSA 后，更新自己的 LSDB，并继续泛洪（除始发路由器外），同时<strong>立即</strong>触发一次 SPF 计算（部分计算或完全计算，取决于 LSA 类型）。</li>
-<li>定期发送 LSA（老化时间默认为 30 分钟），收到后会刷新老化计时器。</li>
+<li><strong>加入频道：</strong> 你只能调到某个频率（组播组地址，如<code>239.1.2.3</code>）。只要调到这个频率，就能收到<strong>所有</strong>在这个频率上播放的节目（源），无法选择具体电台。</li>
+<li><strong>离开频道：</strong> 直接关掉收音机（发送离开报文）。路由器会快速确认是否还有人听这个频道。</li>
+</ul>
+<p><strong>IGMPv2 关键特点：</strong></p>
+<ol>
+<li><strong>ASM (Any-Source Multicast) 模型：</strong> 只关心<strong>组地址</strong>。加入<code>239.1.2.3</code>，意味着接收<strong>任何源</strong>发送到这个地址的流量。</li>
+<li><strong>离开机制 (Leave Message)：</strong> 成员离开时<strong>主动</strong>发送离开报文，路由器触发特定组查询（Group-Specific Query）快速确认是否还有成员。<strong>显著减少了离开延迟！</strong> (相比v1靠超时判断)。</li>
+<li><strong>查询器选举 (Querier Election)：</strong> 同一网段多个路由器时，通过比较IP地址<strong>自动选举</strong>一个负责发送查询报文（谁是老大谁来问）。</li>
+<li><strong>成员报告抑制：</strong> 多个成员想加入同一组时，后听到报告的成员会抑制自己的报告，减少网络流量。</li>
+</ol>
+<p><strong>❌</strong>** IGMPv2 痛点：**</p>
+<ul>
+<li><strong>无法选择节目源！</strong> 加入<code>239.1.2.3</code>，会收到<strong>所有</strong>发送到此地址的流量，即使是恶意流量或低质量源，造成带宽浪费和安全风险（源泛滥）。</li>
+</ul>
+<h3 id="-igmpv3升级版精准点播源过滤">🚀 IGMPv3：升级版“精准点播”源过滤
+</h3><p>想象一个智能电视盒子📺：</p>
+<ul>
+<li><strong>加入频道：</strong> 你可以选择<code>239.1.2.3</code>这个“频道”，并且<strong>精确指定</strong>只接收来自“央视”(源S1)的节目，或者排除“某个地方台”(源S2)的节目。</li>
+<li><strong>离开/修改：</strong> 可以随时修改你的“频道订阅清单”（源列表）。</li>
+</ul>
+<p><strong>IGMPv3 核心飞跃：SSM (Source-Specific Multicast) 模型支持！</strong></p>
+<ol>
+<li><strong>源过滤 (Source Filtering)：</strong> 成员报告报文中包含<strong>组地址 + 源地址列表</strong>。
+<ul>
+<li><strong>INCLUDE 模式：</strong> 只接收<strong>列表内</strong>指定源发送到该组的流量。<code>(G, INCLUDE, {S1, S2})</code> -&gt; 只看S1和S2发的G组内容。</li>
+<li><strong>EXCLUDE 模式：</strong> 接收<strong>列表外</strong>所有源发送到该组的流量。<code>(G, EXCLUDE, {S3})</code> -&gt; 接收除了S3以外任何源发的G组内容。</li>
 </ul>
 </li>
-<li><strong>路由计算：</strong> 路由器使用 SPF 算法基于最新的 LSDB 计算最短路径树，将最优路径安装到路由表中。</li>
-<li><strong>维护邻居关系：</strong> 通过周期性的 Hello 包（默认 10 秒/30 秒 Dead）维护邻居关系。若在 Dead Interval 内未收到邻居的 Hello 包，则认为邻居失效，清除邻接关系，移除该邻居产生的 LSA，触发新的 SPF 计算。</li>
+<li><strong>更灵活的状态维护：</strong> 主机为每个组维护一个“源过滤”状态，可随时发送报告更新（加入新源、移除旧源、改变模式）。</li>
+<li><strong>兼容性：</strong> 通常兼容IGMPv2成员（路由器工作在v3时，会以ASM方式处理v2报告）。</li>
+<li><strong>报告聚合：</strong> 更复杂的报告机制，但设计上仍考虑减少报文数量。</li>
 </ol>
-<h2 id="总结">总结
-</h2><p>OSPF 是一个强大、复杂且高度可扩展的链路状态内部网关协议。其核心在于每个路由器都拥有相同的网络拓扑地图（LSDB），并独立运行 SPF 算法计算无环的最短路径。通过区域划分解决了大型网络的可扩展性问题。理解 LSA 的类型和作用、邻居/邻接建立过程、DR/BDR 角色、区域概念（尤其是 Area 0）以及 SPF 计算原理是掌握 OSPF 的关键。虽然配置和设计比 RIP 复杂，但其快速收敛、无环、可扩展的特性使其成为现代企业网和数据中心内部网络路由的首选协议之一。</p>
+<h3 id="-igmpv2-与-igmpv3-核心差异速查表">📊 IGMPv2 与 IGMPv3 核心差异速查表
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">特性</th>
+          <th style="text-align: left">IGMPv2</th>
+          <th style="text-align: left">IGMPv3</th>
+          <th style="text-align: left">优势对比</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>模型</strong></td>
+          <td style="text-align: left">ASM (Any-Source Multicast)</td>
+          <td style="text-align: left"><strong>ASM + SSM (Source-Specific)</strong></td>
+          <td style="text-align: left"><strong>v3支持精确指定/排除源！</strong></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>加入粒度</strong></td>
+          <td style="text-align: left">仅组地址 (<code>G</code>)</td>
+          <td style="text-align: left"><strong>组地址 + 源地址列表 (</strong><code>G, S</code><strong>)</strong></td>
+          <td style="text-align: left"><strong>v3精细控制源，避免无效流量</strong></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>过滤模式</strong></td>
+          <td style="text-align: left">无 (隐含接收所有源)</td>
+          <td style="text-align: left"><strong>INCLUDE / EXCLUDE</strong></td>
+          <td style="text-align: left"><strong>v3提供两种灵活的订阅方式</strong></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>离开机制</strong></td>
+          <td style="text-align: left">有 (发送离开报文)</td>
+          <td style="text-align: left">有 (通过发送更新模式的报告实现)</td>
+          <td style="text-align: left">两者离开效率都远高于v1</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>查询器选举</strong></td>
+          <td style="text-align: left">有 (基于IP地址)</td>
+          <td style="text-align: left">有 (机制相同)</td>
+          <td style="text-align: left">相同</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>主要优势</strong></td>
+          <td style="text-align: left">实现简单，广泛支持</td>
+          <td style="text-align: left"><strong>安全性高，带宽利用率高，支持SSM应用</strong></td>
+          <td style="text-align: left"><strong>v3是现代组播应用的基石</strong></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>典型应用</strong></td>
+          <td style="text-align: left">早期视频广播、基础组播应用</td>
+          <td style="text-align: left"><strong>IPTV (频道切换)、视频会议源选择、安全组播、金融行情</strong></td>
+          <td style="text-align: left"><strong>v3满足高性能、高安全需求</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="-为什么你需要关心igmpv3">🧠 为什么你需要关心IGMPv3？
+</h3><ol>
+<li><strong>省带宽、提效率：</strong> 只接收需要的源，避免垃圾组播流浪费宝贵带宽，尤其在视频等高流量场景。</li>
+<li><strong>增强安全性：</strong> 天然抵御来自未授权源的组播洪泛攻击。</li>
+<li><strong>支撑现代应用：</strong> IPTV换台快、大型视频会议选择发言人流畅、金融行情精确分发&hellip;都依赖SSM，而SSM的核心就是IGMPv3！</li>
+<li><strong>未来趋势：</strong> 随着万兆网络普及和组播应用深化，IGMPv3已成为主流和推荐配置。</li>
+</ol>
+<h3 id="-总结升级你的组播沟通语言">💡 总结：升级你的组播“沟通语言”
+</h3><ul>
+<li><strong>IGMPv2 是基础：</strong> 解决了“我要看G频道”和“我不看了”的问题，效率比v1高，但<strong>无法选择节目源</strong>，如同吃大锅饭。</li>
+<li><strong>IGMPv3 是飞跃：</strong> 在v2基础上，增加了强大的<strong>源过滤能力</strong>（INCLUDE/EXCLUDE），实现了“我要看G频道，但<strong>只要/不要</strong>S1/S2&hellip;提供的节目”的精准控制。这是<strong>高效、安全、现代组播应用的基石</strong>。</li>
+</ul>
+<p><strong>📣</strong>** 行动建议：** 如果你的网络中存在视频分发、实时通信、大规模数据推送等组播应用，尤其是对带宽和安全性有要求，<strong>强烈建议部署IGMPv3</strong>！检查你的路由器、交换机和终端操作系统是否支持并启用了它。别让过时的协议，成为网络流畅体验的瓶颈！</p>
+<blockquote>
+</blockquote>
 
 </section>
 
@@ -433,9 +472,9 @@
     
     <section class="article-tags">
         
-            <a href="/tags/ospf/">Ospf</a>
+            <a href="/tags/%E7%BB%84%E6%92%AD/">组播</a>
         
-            <a href="/tags/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83/">数据中心</a>
+            <a href="/tags/igmp/">Igmp</a>
         
     </section>
 
@@ -469,12 +508,12 @@
             
                 
 <article class="">
-    <a href="/p/%E7%BB%84%E6%92%ADigmpv2%E5%92%8Cigmpv3%E5%8C%BA%E5%88%AB/">
+    <a href="/p/%E7%BB%84%E6%92%ADigmp%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">组播igmpv2和igmpv3区别</h2>
+            <h2 class="article-title">组播igmp协议详解</h2>
         </div>
     </a>
 </article>
@@ -482,12 +521,12 @@
             
                 
 <article class="">
-    <a href="/p/%E7%BB%84%E6%92%ADigmp%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/">
+    <a href="/p/ospf%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">组播igmp协议详解</h2>
+            <h2 class="article-title">OSPF协议详解</h2>
         </div>
     </a>
 </article>
