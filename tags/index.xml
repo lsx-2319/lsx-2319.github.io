@@ -7,7 +7,31 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>Example Person</copyright>
-        <lastBuildDate>Sun, 24 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://example.com/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Thu, 18 Sep 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://example.com/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>C&#43;&#43;</title>
+        <link>https://example.com/tags/c&#43;&#43;/</link>
+        <pubDate>Thu, 18 Sep 2025 00:00:00 +0000</pubDate>
+        
+        <guid>https://example.com/tags/c&#43;&#43;/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Dpdk</title>
+        <link>https://example.com/tags/dpdk/</link>
+        <pubDate>Thu, 18 Sep 2025 00:00:00 +0000</pubDate>
+        
+        <guid>https://example.com/tags/dpdk/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>网络</title>
+        <link>https://example.com/tags/%E7%BD%91%E7%BB%9C/</link>
+        <pubDate>Thu, 18 Sep 2025 00:00:00 +0000</pubDate>
+        
+        <guid>https://example.com/tags/%E7%BD%91%E7%BB%9C/</guid>
+        <description></description>
+        </item>
+        <item>
         <title>Frp</title>
         <link>https://example.com/tags/frp/</link>
         <pubDate>Sun, 24 Aug 2025 00:00:00 +0000</pubDate>
