@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>容器 on star‘s Blog</title>
+        <link>https://example.com/categories/%E5%AE%B9%E5%99%A8/</link>
+        <description>Recent content in 容器 on star‘s Blog</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <copyright>Example Person</copyright>
+        <lastBuildDate>Sun, 07 Dec 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://example.com/categories/%E5%AE%B9%E5%99%A8/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>深入解析Docker容器的rootfs</title>
+        <link>https://example.com/p/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90docker%E5%AE%B9%E5%99%A8%E7%9A%84rootfs/</link>
+        <pubDate>Sun, 07 Dec 2025 00:00:00 +0000</pubDate>
+        
+        <guid>https://example.com/p/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90docker%E5%AE%B9%E5%99%A8%E7%9A%84rootfs/</guid>
+        <description>&lt;h1 id=&#34;深入解析docker容器的rootfs容器独立性的基石&#34;&gt;深入解析Docker容器的rootfs：容器独立性的基石
+&lt;/h1&gt;&lt;p&gt;你是否曾经好奇，为什么Docker容器能在毫秒内启动，并且每个容器都拥有自己独立的文件系统，互不干扰？今天我们就来揭开这个秘密——这一切的核心在于&lt;strong&gt;rootfs&lt;/strong&gt;（根文件系统）。&lt;/p&gt;
+&lt;h2 id=&#34;什么是rootfs&#34;&gt;什么是rootfs？
+&lt;/h2&gt;&lt;p&gt;简单来说，rootfs是容器的&amp;quot;根目录&amp;quot;。当你运行一个容器时，Docker会为这个容器创建一个独立的、隔离的文件系统视图，这就是rootfs。它让容器内的进程认为自己拥有完整的Linux文件系统，从&lt;code&gt;/&lt;/code&gt;根目录开始。&lt;/p&gt;
+&lt;p&gt;但有趣的是，这个&amp;quot;完整&amp;quot;的文件系统实际上是由多个&lt;strong&gt;只读层&lt;/strong&gt;和一个&lt;strong&gt;可写层&lt;/strong&gt;组合而成的。这正是Docker设计的精妙之处。&lt;/p&gt;
+&lt;h2 id=&#34;为什么需要rootfs&#34;&gt;为什么需要rootfs？
+&lt;/h2&gt;&lt;p&gt;想象一下传统虚拟机：每个虚拟机都需要完整的操作系统副本，包括内核、系统库、配置文件等。这带来了巨大的资源开销和启动延迟。&lt;/p&gt;
+&lt;p&gt;相比之下，容器通过rootfs实现了：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;轻量级&lt;/strong&gt;：多个容器可以共享基础镜像层&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;快速启动&lt;/strong&gt;：无需启动完整操作系统&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;隔离性&lt;/strong&gt;：每个容器有独立的文件系统视图&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;可重复性&lt;/strong&gt;：相同的镜像总是产生相同的文件系统&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;rootfs的分层架构&#34;&gt;rootfs的分层架构
+&lt;/h2&gt;&lt;p&gt;让我们通过一个实际的Dockerfile来理解：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-dockerfile&#34; data-lang=&#34;dockerfile&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; ubuntu:20.04  # 第一层：基础镜像&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;RUN&lt;/span&gt; apt-get update &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; apt-get install -y python3  &lt;span class=&#34;c1&#34;&gt;# 第二层：安装Python&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;COPY&lt;/span&gt; app.py /app/  &lt;span class=&#34;c1&#34;&gt;# 第三层：添加应用代码&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;CMD&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;python3&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/app/app.py&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;构建这个镜像时，Docker会创建三个只读层，加上容器运行时的一个可写层：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plain&#34; data-lang=&#34;plain&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;容器层（可写层）
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    ↑
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;第三层（只读）：app.py
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    ↑
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;第二层（只读）：Python3安装
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    ↑
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;第一层（只读）：Ubuntu基础系统
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;联合文件系统unionfs&#34;&gt;联合文件系统（UnionFS）
+&lt;/h3&gt;&lt;p&gt;这是实现分层架构的技术核心。UnionFS允许将多个目录（层）合并成一个统一的视图。常见的实现有：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;OverlayFS&lt;/strong&gt;（现代Linux默认）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;AUFS&lt;/strong&gt;（早期Docker常用）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Device Mapper&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Btrfs&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以OverlayFS为例，它包含：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;lowerdir&lt;/strong&gt;：只读的镜像层&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;upperdir&lt;/strong&gt;：可写的容器层&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;merged&lt;/strong&gt;：合并后的统一视图&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;动手实验查看容器的rootfs&#34;&gt;动手实验：查看容器的rootfs
+&lt;/h2&gt;&lt;p&gt;让我们实际看看rootfs的结构：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 运行一个简单容器&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker run -d --name test-nginx nginx:alpine
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查找容器的存储位置&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker inspect test-nginx &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep &lt;span class=&#34;s2&#34;&gt;&amp;#34;GraphDriver&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查看OverlayFS结构（路径可能因系统而异）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls /var/lib/docker/overlay2/&amp;lt;container-id&amp;gt;/
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;你会看到类似这样的结构：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;diff/&lt;/strong&gt;：可写层的变化&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;merged/&lt;/strong&gt;：合并后的完整视图&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;work/&lt;/strong&gt;：OverlayFS内部工作目录&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;lower&lt;/strong&gt;：指向只读层的链接&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;rootfs的工作原理&#34;&gt;rootfs的工作原理
+&lt;/h2&gt;&lt;h3 id=&#34;写时复制copy-on-write&#34;&gt;写时复制（Copy-on-Write）
+&lt;/h3&gt;&lt;p&gt;这是Docker高效存储的关键。当容器需要修改文件时：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;读取文件&lt;/strong&gt;：直接从底层只读层读取&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;修改文件&lt;/strong&gt;：复制到可写层，然后在可写层修改&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;读取修改后的文件&lt;/strong&gt;：优先从可写层读取&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这种机制意味着：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;相同的基础镜像可以被多个容器共享&lt;/li&gt;
+&lt;li&gt;只有实际修改的文件才会占用额外空间&lt;/li&gt;
+&lt;li&gt;容器删除时，只需删除可写层&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;容器内的文件系统视角&#34;&gt;容器内的文件系统视角
+&lt;/h3&gt;&lt;p&gt;在容器内部，所有层被合并成一个统一的&lt;code&gt;/&lt;/code&gt;根目录：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 进入容器查看&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; -it test-nginx sh
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查看根目录，这是所有层的合并视图&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ls /
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 退出容器&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;exit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;rootfs的实际意义&#34;&gt;rootfs的实际意义
+&lt;/h2&gt;&lt;h3 id=&#34;1-高效的镜像分发&#34;&gt;1. 高效的镜像分发
+&lt;/h3&gt;&lt;p&gt;Docker Hub上的镜像以层为单位存储和传输。当你拉取镜像时：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;已存在的层不会重复下载&lt;/li&gt;
+&lt;li&gt;只有新层需要传输&lt;/li&gt;
+&lt;li&gt;层可以并行下载&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;2-快速构建&#34;&gt;2. 快速构建
+&lt;/h3&gt;&lt;p&gt;Docker构建利用层缓存：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-dockerfile&#34; data-lang=&#34;dockerfile&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c&#34;&gt;# 如果基础层未变，这些指令会使用缓存&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;RUN&lt;/span&gt; apt-get update&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;RUN&lt;/span&gt; apt-get install -y curl&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;c&#34;&gt;# 这之后的指令才会重新执行&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;COPY&lt;/span&gt; app.py /app/&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;3-空间优化&#34;&gt;3. 空间优化
+&lt;/h3&gt;&lt;p&gt;多个容器共享基础层，极大减少存储占用。&lt;/p&gt;
+&lt;h3 id=&#34;4-安全性&#34;&gt;4. 安全性
+&lt;/h3&gt;&lt;p&gt;通过只读的基础层，减少了攻击面。可以使用&lt;code&gt;docker run --read-only&lt;/code&gt;运行只读容器。&lt;/p&gt;
+&lt;h2 id=&#34;常见误区澄清&#34;&gt;常见误区澄清
+&lt;/h2&gt;&lt;h3 id=&#34;误区1每个容器都有完整的操作系统副本&#34;&gt;误区1：每个容器都有完整的操作系统副本
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;事实&lt;/strong&gt;：容器共享主机内核，只包含必要的用户空间文件。&lt;/p&gt;
+&lt;h3 id=&#34;误区2容器内的修改会影响镜像&#34;&gt;误区2：容器内的修改会影响镜像
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;事实&lt;/strong&gt;：容器的修改只存在于可写层，不会影响底层的只读镜像层。&lt;/p&gt;
+&lt;h3 id=&#34;误区3删除容器会释放所有空间&#34;&gt;误区3：删除容器会释放所有空间
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;事实&lt;/strong&gt;：只有可写层被删除，共享的镜像层仍然存在。&lt;/p&gt;
+&lt;h2 id=&#34;最佳实践&#34;&gt;最佳实践
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;最小化镜像层数&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;合并相关指令&lt;/li&gt;
+&lt;li&gt;使用多阶段构建&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;合理安排指令顺序&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-dockerfile&#34; data-lang=&#34;dockerfile&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c&#34;&gt;# 将变化频繁的层放在后面&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;COPY&lt;/span&gt; package.json /app/&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;RUN&lt;/span&gt; npm install  &lt;span class=&#34;c1&#34;&gt;# 这层变化较少&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;COPY&lt;/span&gt; . /app/     &lt;span class=&#34;c1&#34;&gt;# 这层变化频繁&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;&lt;strong&gt;使用.dockerignore&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;避免不必要的文件进入镜像&lt;/li&gt;
+&lt;li&gt;减少构建上下文大小&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;定期清理&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 清理未使用的镜像和层&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker system prune -a
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;总结&#34;&gt;总结
+&lt;/h2&gt;&lt;p&gt;rootfs是Docker容器技术的核心之一，它通过分层架构和联合文件系统，实现了容器的轻量、快速和隔离。理解rootfs不仅有助于我们更好地使用Docker，还能帮助我们设计更高效的容器化应用。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
