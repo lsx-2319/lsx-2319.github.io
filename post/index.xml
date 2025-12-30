@@ -7,7 +7,172 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>Example Person</copyright>
-        <lastBuildDate>Sun, 07 Dec 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://example.com/post/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Tue, 30 Dec 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://example.com/post/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>网络排障工具conntrack</title>
+        <link>https://example.com/p/%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C%E5%B7%A5%E5%85%B7conntrack/</link>
+        <pubDate>Tue, 30 Dec 2025 00:00:00 +0000</pubDate>
+        
+        <guid>https://example.com/p/%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C%E5%B7%A5%E5%85%B7conntrack/</guid>
+        <description>&lt;p&gt;在网络故障排查中，&lt;code&gt;conntrack&lt;/code&gt; 是洞察内核连接跟踪状态的核心工具。它不直接配置网络，而是像 &lt;strong&gt;“网络连接监控器”&lt;/strong&gt;，通过显示连接状态帮助你判断报文在何处被处理或丢弃。&lt;/p&gt;
+&lt;h3 id=&#34;-conntrack-核心价值连接状态视角&#34;&gt;📊 Conntrack 核心价值：连接状态视角
+&lt;/h3&gt;&lt;p&gt;传统工具（如 &lt;code&gt;ping&lt;/code&gt;, &lt;code&gt;tcpdump&lt;/code&gt;）告诉你&lt;strong&gt;报文“到哪里”&lt;/strong&gt;，而 &lt;code&gt;conntrack&lt;/code&gt; 告诉你内核&lt;strong&gt;认为某个连接“处于什么状态”&lt;/strong&gt;。这对于诊断防火墙、NAT和状态化过滤引起的问题至关重要。&lt;/p&gt;
+&lt;h3 id=&#34;-常用命令与实战解读&#34;&gt;🛠️ 常用命令与实战解读
+&lt;/h3&gt;&lt;p&gt;以下命令需 &lt;code&gt;root&lt;/code&gt; 权限（&lt;code&gt;sudo&lt;/code&gt;）。&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;命令&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;用途&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;关键输出解读与示例&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;code&gt;conntrack -L&lt;/code&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;列出当前所有连接跟踪条目。&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;查看所有被跟踪的连接（TCP/UDP/ICMP）。   &lt;code&gt;conntrack -L -o extended&lt;/code&gt; （显示更详细字段）&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;code&gt;conntrack -E&lt;/code&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;实时监控&lt;/strong&gt;新连接事件。&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;故障排查首选&lt;/strong&gt;。实时观察新连接是否被创建。   &lt;code&gt;conntrack -E -p tcp --dport 80&lt;/code&gt; （监控特定流量）&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;code&gt;conntrack -L -p icmp&lt;/code&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;查看特定协议（如ICMP）的连接。&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;检查 &lt;code&gt;ping&lt;/code&gt; 产生的跟踪条目。**状态应为 **&lt;code&gt;ESTABLISHED&lt;/code&gt;。&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;code&gt;conntrack -L -p udp&lt;/code&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;查看UDP“连接”（如DNS）。&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;UDP虽无状态，但内核仍会跟踪会话。用于检查DNS查询。&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;code&gt;conntrack -L -s &amp;lt;IP&amp;gt;&lt;/code&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;过滤查看指定源IP的连接。&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;定位来自特定主机的所有连接状态。&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;code&gt;conntrack -D&lt;/code&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;手动删除连接跟踪条目。&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;强制清除某条过期或僵死的连接，常用于测试。   &lt;code&gt;conntrack -D -p tcp --orig-port-dst 80&lt;/code&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;-经典故障排查场景与命令流&#34;&gt;🔍 经典故障排查场景与命令流
+&lt;/h3&gt;&lt;p&gt;当网络不通时，可按此流程使用 &lt;code&gt;conntrack&lt;/code&gt; 进行状态分析：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://example.com/p/%E7%BD%91%E7%BB%9C%E6%8E%92%E9%9A%9C%E5%B7%A5%E5%85%B7conntrack/liucheng.svg&#34;
+	
+	
+	
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;image.png&#34;
+	
+	
+&gt;&lt;/p&gt;
+&lt;h4 id=&#34;场景一排查-ping-icmp-不通&#34;&gt;场景一：排查 &lt;code&gt;ping&lt;/code&gt; (ICMP) 不通
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;在一个终端启动监控：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;conntrack -E -p icmp
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;在另一个终端执行 &lt;code&gt;ping &amp;lt;目标IP&amp;gt;&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;观察监控终端：
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;无任何输出&lt;/strong&gt;：报文未到达 &lt;code&gt;conntrack&lt;/code&gt; 模块，问题可能在&lt;strong&gt;路由&lt;/strong&gt;或&lt;strong&gt;出站防火墙&lt;/strong&gt;之前。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;出现 &lt;strong&gt;&lt;code&gt;[NEW]&lt;/code&gt;&lt;/strong&gt; 事件&lt;/strong&gt;：请求已发出，被内核跟踪。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;随后出现 &lt;strong&gt;&lt;code&gt;[UPDATE]&lt;/code&gt;&lt;/strong&gt; 事件&lt;/strong&gt;：收到回复，连接建立成功。若只有 &lt;code&gt;[NEW]&lt;/code&gt; 无 &lt;code&gt;[UPDATE]&lt;/code&gt;，则&lt;strong&gt;回复未被收到&lt;/strong&gt;，问题可能在对方主机、中间网络或本机入站规则。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;场景二排查-tcpudp-服务不通如sshweb&#34;&gt;场景二：排查 TCP/UDP 服务不通（如SSH、Web）
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;监控相关连接：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;conntrack -E -p tcp --dport &lt;span class=&#34;m&#34;&gt;22&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;# 监控SSH&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;尝试建立连接（如 &lt;code&gt;ssh&lt;/code&gt; 命令）。&lt;/li&gt;
+&lt;li&gt;观察状态：
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;理想情况&lt;/strong&gt;：看到 &lt;code&gt;[NEW]&lt;/code&gt; -&amp;gt; &lt;code&gt;[UPDATE]&lt;/code&gt;（状态变为 &lt;code&gt;ESTABLISHED&lt;/code&gt;）。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;只有 &lt;strong&gt;&lt;code&gt;[NEW]&lt;/code&gt;：你的请求出去了，但对方回复没回来。检查对方服务、中间网络及本机 &lt;code&gt;INPUT&lt;/code&gt;&lt;/strong&gt; 链/安全组入方向&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;无事件&lt;/strong&gt;：报文在到达 &lt;code&gt;conntrack&lt;/code&gt; 前被丢弃。检查本机 &lt;code&gt;OUTPUT&lt;/code&gt;** 链/安全组出方向**、路由。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;场景三诊断-conntrack-表满导致的丢包&#34;&gt;场景三：诊断 &lt;code&gt;conntrack&lt;/code&gt; 表满导致的丢包
+&lt;/h4&gt;&lt;p&gt;这是经典故障，症状为&lt;strong&gt;连接随机超时或中断&lt;/strong&gt;。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;检查日志&lt;/strong&gt;：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;dmesg &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep &lt;span class=&#34;s2&#34;&gt;&amp;#34;conntrack&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 关键信息：`nf_conntrack: table full, dropping packet`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;&lt;strong&gt;查看当前计数与上限&lt;/strong&gt;：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sysctl net.netfilter.nf_conntrack_count
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sysctl net.netfilter.nf_conntrack_max
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 如果 count 接近 max，则表将满&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;&lt;strong&gt;临时解决方案&lt;/strong&gt;：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 增大表上限&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sysctl -w net.netfilter.nf_conntrack_max&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;524288&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 缩短某些超时时间，加速条目回收（谨慎调整）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sysctl -w net.netfilter.nf_conntrack_tcp_timeout_established&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1200&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;-核心要点总结&#34;&gt;💎 核心要点总结
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;conntrack -E&lt;/code&gt;** 是你的“第一双眼睛”**：在测试前打开，直接观察连接是否被内核成功跟踪。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;状态是关键&lt;/strong&gt;：&lt;code&gt;NEW&lt;/code&gt; 表示请求已发出；&lt;code&gt;ESTABLISHED&lt;/code&gt; 表示双向通信已得到内核放行；&lt;code&gt;UNREPLIED&lt;/code&gt; 通常意味着只有单边流量。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;conntrack&lt;/code&gt;** 与 &lt;strong&gt;&lt;code&gt;tcpdump&lt;/code&gt;&lt;/strong&gt; 是黄金组合**：&lt;code&gt;conntrack&lt;/code&gt; 看&lt;strong&gt;状态&lt;/strong&gt;，&lt;code&gt;tcpdump&lt;/code&gt; 抓&lt;strong&gt;报文&lt;/strong&gt;，两者结合可以精确定位报文是在哪一层被丢弃。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;表满是常见病&lt;/strong&gt;：在网关、高连接数服务器上，务必监控 &lt;code&gt;nf_conntrack_count&lt;/code&gt;，并适当调整 &lt;code&gt;max&lt;/code&gt; 值。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;下次遇到“时通时不通”或“特定协议不通”的诡异问题时，首先运行 &lt;code&gt;conntrack -E&lt;/code&gt; 进行实时监控，它能为你提供最直接的线索。&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>深入解析Docker容器的rootfs</title>
         <link>https://example.com/p/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90docker%E5%AE%B9%E5%99%A8%E7%9A%84rootfs/</link>
         <pubDate>Sun, 07 Dec 2025 00:00:00 +0000</pubDate>
