@@ -48,28 +48,12 @@
         <description></description>
         </item>
         <item>
-        <title>Golang</title>
-        <link>https://example.com/categories/golang/</link>
-        <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
-        
-        <guid>https://example.com/categories/golang/</guid>
-        <description></description>
-        </item>
-        <item>
         <title>K8s</title>
         <link>https://example.com/categories/k8s/</link>
-        <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
-        
-        <guid>https://example.com/categories/k8s/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>Test</title>
-        <link>https://example.com/categories/test/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://example.com/categories/test/</guid>
-        <description>&lt;img src="https://example.com/categories/test/hutomo-abrianto-l2jk-uxb1BY-unsplash.jpg" alt="Featured image of post Test" /&gt;</description>
+        <guid>https://example.com/categories/k8s/</guid>
+        <description>&lt;img src="https://example.com/categories/k8s/hutomo-abrianto-l2jk-uxb1BY-unsplash.jpg" alt="Featured image of post K8s" /&gt;</description>
         </item>
         
     </channel>
